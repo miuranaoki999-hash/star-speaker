@@ -11,576 +11,245 @@
 <title>🌟 Star Speaker - ฝึกพูดภาษาอังกฤษ</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
-
   :root {
-    --sky: #6dd5fa;
-    --sky2: #2980b9;
-    --sun: #FFD93D;
-    --star: #FF6B6B;
-    --mint: #6BCB77;
-    --purple: #845EC2;
-    --peach: #FF9671;
-    --white: #fff;
-    --dark: #2d2d5e;
+    --sky:#6dd5fa; --sky2:#2980b9; --sun:#FFD93D; --mint:#6BCB77;
+    --purple:#845EC2; --peach:#FF9671; --dark:#2d2d5e;
   }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Nunito',sans-serif;
+    background:linear-gradient(160deg,#a8edea 0%,#fed6e3 100%);
+    min-height:100vh; overflow-x:hidden;
+    display:flex; flex-direction:column; align-items:center;
+    padding:16px 12px 40px;
+  }
+  .cloud{position:fixed;background:white;border-radius:50px;opacity:.5;animation:floatCloud linear infinite;z-index:0;}
+  .cloud::before,.cloud::after{content:'';position:absolute;background:white;border-radius:50%;}
+  .cloud1{width:100px;height:35px;top:6%;animation-duration:30s;animation-delay:-10s;}
+  .cloud1::before{width:50px;height:50px;top:-20px;left:15px;}
+  .cloud1::after{width:35px;height:35px;top:-12px;left:45px;}
+  .cloud2{width:80px;height:28px;top:22%;animation-duration:40s;animation-delay:-20s;}
+  .cloud2::before{width:40px;height:40px;top:-16px;left:10px;}
+  .cloud2::after{width:28px;height:28px;top:-10px;left:38px;}
+  .cloud3{width:120px;height:40px;top:58%;animation-duration:25s;animation-delay:-5s;}
+  .cloud3::before{width:60px;height:60px;top:-25px;left:18px;}
+  .cloud3::after{width:42px;height:42px;top:-15px;left:55px;}
+  @keyframes floatCloud{from{left:-200px}to{left:110%}}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  .wrapper{position:relative;z-index:1;width:100%;max-width:520px;}
 
-  body {
-    font-family: 'Nunito', sans-serif;
-    background: linear-gradient(160deg, #a8edea 0%, #fed6e3 100%);
-    min-height: 100vh;
-    overflow-x: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px 12px 40px;
-  }
+  /* Header */
+  .header{text-align:center;margin-bottom:14px;animation:bounceIn .6s ease;}
+  .header h1{font-family:'Fredoka One',cursive;font-size:2.2rem;color:var(--dark);text-shadow:3px 3px 0 rgba(255,255,255,.7);}
+  .header p{font-size:.95rem;color:var(--purple);font-weight:700;margin-top:2px;}
+  .mascot{font-size:3.5rem;display:block;animation:wiggle 2s ease-in-out infinite;}
 
-  .cloud {
-    position: fixed;
-    background: white;
-    border-radius: 50px;
-    opacity: 0.6;
-    animation: floatCloud linear infinite;
-    z-index: 0;
-  }
-  .cloud::before, .cloud::after {
-    content: '';
-    position: absolute;
-    background: white;
-    border-radius: 50%;
-  }
-  .cloud1 { width: 100px; height: 35px; top: 8%; animation-duration: 30s; animation-delay: -10s; }
-  .cloud1::before { width: 50px; height: 50px; top: -20px; left: 15px; }
-  .cloud1::after { width: 35px; height: 35px; top: -12px; left: 45px; }
-  .cloud2 { width: 80px; height: 28px; top: 20%; animation-duration: 40s; animation-delay: -20s; }
-  .cloud2::before { width: 40px; height: 40px; top: -16px; left: 10px; }
-  .cloud2::after { width: 28px; height: 28px; top: -10px; left: 38px; }
-  .cloud3 { width: 120px; height: 40px; top: 60%; animation-duration: 25s; animation-delay: -5s; }
-  .cloud3::before { width: 60px; height: 60px; top: -25px; left: 18px; }
-  .cloud3::after { width: 42px; height: 42px; top: -15px; left: 55px; }
+  /* Score bar */
+  .stars-bar{background:white;border-radius:20px;padding:10px 18px;display:flex;align-items:center;
+    justify-content:space-between;margin-bottom:14px;
+    box-shadow:0 4px 15px rgba(0,0,0,.1);border:3px solid var(--sun);}
+  .stars-label{font-family:'Fredoka One',cursive;font-size:1rem;color:var(--dark);white-space:nowrap;}
+  .stars-count{font-family:'Fredoka One',cursive;font-size:1.5rem;color:var(--sun);
+    text-shadow:1px 1px 0 #e0a800;display:flex;align-items:center;gap:4px;white-space:nowrap;}
+  .progress-bar{background:#eee;border-radius:20px;height:10px;flex:1;margin:0 10px;overflow:hidden;}
+  .progress-fill{height:100%;background:linear-gradient(90deg,#FFD93D,#FF6B6B);border-radius:20px;
+    transition:width .5s cubic-bezier(.68,-.55,.27,1.55);}
 
-  @keyframes floatCloud {
-    from { left: -200px; }
-    to { left: 110%; }
-  }
+  /* Level tabs */
+  .levels-row{display:flex;gap:8px;margin-bottom:12px;}
+  .level-btn{flex:1;background:white;border:3px solid #ddd;border-radius:14px;padding:8px 4px;
+    font-family:'Fredoka One',cursive;font-size:.9rem;cursor:pointer;transition:all .2s;color:#888;text-align:center;}
+  .level-btn.active{border-color:var(--purple);background:linear-gradient(135deg,#f5f0ff,#e8deff);
+    color:var(--purple);transform:scale(1.04);}
 
-  .wrapper {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    max-width: 500px;
-  }
+  /* Category grid */
+  .cat-section{background:white;border-radius:22px;padding:16px;margin-bottom:14px;
+    box-shadow:0 6px 20px rgba(0,0,0,.1);animation:slideUp .35s ease;}
+  .cat-section h3{font-family:'Fredoka One',cursive;font-size:1.05rem;color:var(--dark);margin-bottom:12px;text-align:center;}
+  .cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+  .cat-btn{background:#f8f4ff;border:2px solid #ddd;border-radius:14px;padding:10px 4px 8px;
+    cursor:pointer;transition:all .2s;text-align:center;font-family:'Nunito',sans-serif;}
+  .cat-btn:hover{border-color:var(--purple);transform:scale(1.05);}
+  .cat-btn.active{border-color:var(--purple);background:linear-gradient(135deg,#f0e8ff,#e0d0ff);
+    transform:scale(1.06);box-shadow:0 3px 10px rgba(132,94,194,.25);}
+  .cat-btn .cat-emoji{font-size:1.6rem;display:block;margin-bottom:3px;}
+  .cat-btn .cat-name{font-size:.7rem;font-weight:800;color:#666;line-height:1.2;}
+  .cat-btn.active .cat-name{color:var(--purple);}
 
-  .header {
-    text-align: center;
-    margin-bottom: 20px;
-    animation: bounceIn 0.6s ease;
-  }
-  .header h1 {
-    font-family: 'Fredoka One', cursive;
-    font-size: 2.4rem;
-    color: var(--dark);
-    text-shadow: 3px 3px 0 rgba(255,255,255,0.7);
-    line-height: 1.1;
-  }
-  .header p {
-    font-size: 1rem;
-    color: var(--purple);
-    font-weight: 700;
-    margin-top: 4px;
-  }
-  .mascot {
-    font-size: 4rem;
-    display: block;
-    animation: wiggle 2s ease-in-out infinite;
-  }
+  /* Word card */
+  .card{background:white;border-radius:28px;padding:22px 18px;margin-bottom:14px;
+    box-shadow:0 8px 30px rgba(0,0,0,.12);text-align:center;animation:slideUp .4s ease;}
+  .card-top{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;}
+  .level-badge{background:linear-gradient(135deg,var(--purple),#c77dff);color:white;
+    font-family:'Fredoka One',cursive;font-size:.8rem;padding:3px 12px;border-radius:20px;}
+  .cat-badge{background:linear-gradient(135deg,var(--peach),#ff6b35);color:white;
+    font-family:'Fredoka One',cursive;font-size:.8rem;padding:3px 12px;border-radius:20px;}
+  .word-emoji{font-size:5rem;display:block;margin:8px 0;filter:drop-shadow(3px 4px 0 rgba(0,0,0,.1));}
+  .word-display{font-family:'Fredoka One',cursive;font-size:2.8rem;color:var(--dark);margin:4px 0;line-height:1.1;}
+  .word-phonetic{font-size:.95rem;color:var(--purple);font-weight:600;margin-top:4px;
+    background:#f5f0ff;display:inline-block;padding:2px 12px;border-radius:20px;}
+  .word-thai{font-size:1rem;color:#888;font-weight:700;margin-top:4px;}
 
-  /* Total score bar */
-  .stars-bar {
-    background: white;
-    border-radius: 20px;
-    padding: 12px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 16px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    border: 3px solid var(--sun);
-  }
-  .stars-label {
-    font-family: 'Fredoka One', cursive;
-    font-size: 1rem;
-    color: var(--dark);
-    white-space: nowrap;
-  }
-  .stars-count {
-    font-family: 'Fredoka One', cursive;
-    font-size: 1.6rem;
-    color: var(--sun);
-    text-shadow: 1px 1px 0 #e0a800;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    white-space: nowrap;
-  }
-  .progress-bar {
-    background: #eee;
-    border-radius: 20px;
-    height: 10px;
-    flex: 1;
-    margin: 0 10px;
-    overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #FFD93D, #FF6B6B);
-    border-radius: 20px;
-    transition: width 0.5s cubic-bezier(.68,-0.55,.27,1.55);
-  }
-
-  /* Level select */
-  .levels-row {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 16px;
-  }
-  .level-btn {
-    flex: 1;
-    background: white;
-    border: 3px solid #ddd;
-    border-radius: 16px;
-    padding: 10px 6px;
-    font-family: 'Fredoka One', cursive;
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    color: #666;
-    text-align: center;
-  }
-  .level-btn.active {
-    border-color: var(--purple);
-    background: linear-gradient(135deg, #f5f0ff, #e8deff);
-    color: var(--purple);
-    transform: scale(1.04);
-  }
-
-  /* Card */
-  .card {
-    background: white;
-    border-radius: 28px;
-    padding: 24px 20px;
-    margin-bottom: 16px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
-    text-align: center;
-    animation: slideUp 0.4s ease;
-  }
-
-  .level-badge {
-    display: inline-block;
-    background: linear-gradient(135deg, var(--purple), #c77dff);
-    color: white;
-    font-family: 'Fredoka One', cursive;
-    font-size: 0.85rem;
-    padding: 4px 14px;
-    border-radius: 20px;
-    margin-bottom: 12px;
-  }
-
-  .word-display {
-    font-family: 'Fredoka One', cursive;
-    font-size: 3rem;
-    color: var(--dark);
-    margin: 8px 0 4px;
-    line-height: 1.1;
-  }
-  .word-emoji {
-    font-size: 5rem;
-    display: block;
-    margin: 10px 0;
-    filter: drop-shadow(3px 4px 0 rgba(0,0,0,0.1));
-  }
-  .word-thai {
-    font-size: 1.1rem;
-    color: #888;
-    font-weight: 700;
-  }
-  .word-phonetic {
-    font-size: 1rem;
-    color: var(--purple);
-    font-weight: 600;
-    margin-top: 4px;
-    background: #f5f0ff;
-    display: inline-block;
-    padding: 2px 12px;
-    border-radius: 20px;
-  }
-
-  /* Attempt counter */
-  .attempt-indicator {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    margin: 10px 0 4px;
-  }
-  .attempt-dot {
-    width: 12px; height: 12px;
-    border-radius: 50%;
-    background: #eee;
-    border: 2px solid #ddd;
-    transition: all 0.3s;
-  }
-  .attempt-dot.used { background: #ffb3b3; border-color: #FF6B6B; }
-  .attempt-dot.active { background: #FF6B6B; border-color: #cc0000; transform: scale(1.2); }
+  /* Attempt dots */
+  .attempt-indicator{display:flex;justify-content:center;gap:8px;margin:10px 0 4px;}
+  .attempt-dot{width:12px;height:12px;border-radius:50%;background:#eee;border:2px solid #ddd;transition:all .3s;}
+  .attempt-dot.used{background:#ffb3b3;border-color:#FF6B6B;}
+  .attempt-dot.active{background:#FF6B6B;border-color:#cc0000;transform:scale(1.2);}
 
   /* Buttons */
-  .btn-listen {
-    background: linear-gradient(135deg, var(--sky), var(--sky2));
-    color: white;
-    border: none;
-    border-radius: 50px;
-    padding: 12px 28px;
-    font-family: 'Fredoka One', cursive;
-    font-size: 1.1rem;
-    cursor: pointer;
-    margin: 14px 8px 0;
-    box-shadow: 0 4px 0 rgba(0,0,0,0.15);
-    transition: all 0.15s;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
+  .btn-listen{background:linear-gradient(135deg,var(--sky),var(--sky2));color:white;border:none;
+    border-radius:50px;padding:11px 24px;font-family:'Fredoka One',cursive;font-size:1rem;
+    cursor:pointer;margin:12px 6px 0;box-shadow:0 4px 0 rgba(0,0,0,.15);transition:all .15s;
+    display:inline-flex;align-items:center;gap:7px;}
+  .btn-listen:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.15);}
+  .btn-record{background:linear-gradient(135deg,#FF6B6B,#ee0979);color:white;border:none;
+    border-radius:50px;padding:13px 28px;font-family:'Fredoka One',cursive;font-size:1.1rem;
+    cursor:pointer;box-shadow:0 5px 0 rgba(0,0,0,.2);transition:all .15s;
+    display:inline-flex;align-items:center;gap:9px;margin-top:6px;}
+  .btn-record:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(0,0,0,.2);}
+  .btn-record.recording{animation:pulse-rec 1s ease infinite;}
+  .btn-record:disabled{opacity:.4;cursor:not-allowed;}
+  @keyframes pulse-rec{
+    0%,100%{box-shadow:0 5px 0 rgba(0,0,0,.2),0 0 0 0 rgba(255,0,0,.3);}
+    50%{box-shadow:0 5px 0 rgba(0,0,0,.2),0 0 0 12px rgba(255,0,0,0);}
   }
-  .btn-listen:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,0.15); }
+  .mic-wave{display:none;font-size:1.3rem;}
+  .btn-record.recording .mic-wave{display:inline;}
+  .speak-hint{font-size:.8rem;color:#aaa;margin-top:8px;font-weight:600;}
 
-  .btn-record {
-    background: linear-gradient(135deg, #FF6B6B, #ee0979);
-    color: white;
-    border: none;
-    border-radius: 50px;
-    padding: 14px 32px;
-    font-family: 'Fredoka One', cursive;
-    font-size: 1.2rem;
-    cursor: pointer;
-    box-shadow: 0 5px 0 rgba(0,0,0,0.2);
-    transition: all 0.15s;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 6px;
-  }
-  .btn-record:active { transform: translateY(4px); box-shadow: 0 1px 0 rgba(0,0,0,0.2); }
-  .btn-record.recording { animation: pulse-rec 1s ease infinite; }
-  .btn-record:disabled { opacity: 0.4; cursor: not-allowed; }
+  /* Result */
+  .result-box{display:none;border-radius:22px;padding:16px 14px 12px;margin-top:14px;
+    text-align:center;animation:bounceIn .5s ease;}
+  .result-box.show{display:block;}
+  .star-rating-display{display:flex;justify-content:center;gap:5px;margin-bottom:7px;}
+  .rating-star{font-size:2.6rem;filter:grayscale(1) opacity(.3);transition:all .3s;transform:scale(.8);}
+  .rating-star.lit{filter:none;transform:scale(1.1);}
+  .rating-star.lit.bounce{animation:starBounce .5s ease;}
+  @keyframes starBounce{0%{transform:scale(.5) rotate(-20deg);}60%{transform:scale(1.3) rotate(10deg);}100%{transform:scale(1.1) rotate(0deg);}}
+  .result-title{font-family:'Fredoka One',cursive;font-size:1.4rem;margin-bottom:3px;}
+  .result-subtitle{font-size:.9rem;font-weight:700;opacity:.8;}
+  .result-spoken{font-size:.8rem;opacity:.6;margin-top:3px;}
+  .result-box.rating-3{background:linear-gradient(135deg,#fffacd,#fff0a0);border:3px solid #FFD700;}
+  .result-box.rating-3 .result-title{color:#7a5c00;}
+  .result-box.rating-2{background:linear-gradient(135deg,#d4f5d4,#b7e4b7);border:3px solid #6BCB77;}
+  .result-box.rating-2 .result-title{color:#1a5c1a;}
+  .result-box.rating-1{background:linear-gradient(135deg,#fde8e8,#fac5c5);border:3px solid #FF6B6B;}
+  .result-box.rating-1 .result-title{color:#8b0000;}
+  .result-box.rating-0{background:linear-gradient(135deg,#f0f0f0,#e0e0e0);border:3px solid #ccc;}
+  .result-box.rating-0 .result-title{color:#555;}
 
-  @keyframes pulse-rec {
-    0%, 100% { box-shadow: 0 5px 0 rgba(0,0,0,0.2), 0 0 0 0 rgba(255,0,0,0.3); }
-    50% { box-shadow: 0 5px 0 rgba(0,0,0,0.2), 0 0 0 12px rgba(255,0,0,0); }
-  }
-
-  .mic-wave { display: none; font-size: 1.4rem; }
-  .btn-record.recording .mic-wave { display: inline; }
-  .mic-icon { font-size: 1.4rem; }
-
-  /* ===== STAR RATING RESULT ===== */
-  .result-box {
-    display: none;
-    border-radius: 24px;
-    padding: 18px 16px 14px;
-    margin-top: 16px;
-    animation: bounceIn 0.5s ease;
-    text-align: center;
-  }
-  .result-box.show { display: block; }
-
-  /* Star rating display */
-  .star-rating-display {
-    display: flex;
-    justify-content: center;
-    gap: 6px;
-    margin-bottom: 8px;
-  }
-  .rating-star {
-    font-size: 2.8rem;
-    filter: grayscale(1) opacity(0.3);
-    transition: all 0.3s;
-    transform: scale(0.8);
-  }
-  .rating-star.lit {
-    filter: none;
-    transform: scale(1.1);
-  }
-  .rating-star.lit.bounce {
-    animation: starBounce 0.5s ease;
-  }
-
-  @keyframes starBounce {
-    0% { transform: scale(0.5) rotate(-20deg); }
-    60% { transform: scale(1.3) rotate(10deg); }
-    100% { transform: scale(1.1) rotate(0deg); }
-  }
-
-  .result-title {
-    font-family: 'Fredoka One', cursive;
-    font-size: 1.5rem;
-    margin-bottom: 4px;
-  }
-  .result-subtitle {
-    font-size: 0.95rem;
-    font-weight: 700;
-    opacity: 0.8;
-  }
-  .result-spoken {
-    font-size: 0.85rem;
-    opacity: 0.65;
-    margin-top: 4px;
-  }
-
-  /* Colors per rating */
-  .result-box.rating-3 {
-    background: linear-gradient(135deg, #fffacd, #fff0a0);
-    border: 3px solid #FFD700;
-  }
-  .result-box.rating-3 .result-title { color: #7a5c00; }
-  .result-box.rating-2 {
-    background: linear-gradient(135deg, #d4f5d4, #b7e4b7);
-    border: 3px solid #6BCB77;
-  }
-  .result-box.rating-2 .result-title { color: #1a5c1a; }
-  .result-box.rating-1 {
-    background: linear-gradient(135deg, #fde8e8, #fac5c5);
-    border: 3px solid #FF6B6B;
-  }
-  .result-box.rating-1 .result-title { color: #8b0000; }
-  .result-box.rating-0 {
-    background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
-    border: 3px solid #ccc;
-  }
-  .result-box.rating-0 .result-title { color: #555; }
-
-  /* Next button */
-  .btn-next {
-    background: linear-gradient(135deg, var(--mint), #2ec46d);
-    color: white;
-    border: none;
-    border-radius: 50px;
-    padding: 13px 32px;
-    font-family: 'Fredoka One', cursive;
-    font-size: 1.1rem;
-    cursor: pointer;
-    box-shadow: 0 5px 0 rgba(0,0,0,0.15);
-    transition: all 0.15s;
-    margin-top: 12px;
-    display: none;
-  }
-  .btn-next:active { transform: translateY(4px); box-shadow: none; }
-
-  .speak-hint {
-    font-size: 0.85rem;
-    color: #aaa;
-    margin-top: 8px;
-    font-weight: 600;
-  }
+  .btn-next{background:linear-gradient(135deg,var(--mint),#2ec46d);color:white;border:none;
+    border-radius:50px;padding:12px 28px;font-family:'Fredoka One',cursive;font-size:1rem;
+    cursor:pointer;box-shadow:0 5px 0 rgba(0,0,0,.15);transition:all .15s;margin-top:12px;display:none;}
+  .btn-next:active{transform:translateY(4px);box-shadow:none;}
 
   /* Fallback */
-  .fallback-section {
-    display: none;
-    margin-top: 14px;
-    background: #fff8e1;
-    border: 2px dashed #FFD93D;
-    border-radius: 16px;
-    padding: 14px;
-  }
-  .fallback-section.visible { display: block; }
-  .fallback-label {
-    font-family: 'Fredoka One', cursive;
-    font-size: 0.95rem;
-    color: #7a5c00;
-    margin-bottom: 10px;
-  }
-  .fallback-btns { display: flex; gap: 8px; justify-content: center; }
-  .btn-fb {
-    border: none;
-    border-radius: 50px;
-    padding: 10px 20px;
-    font-family: 'Fredoka One', cursive;
-    font-size: 0.95rem;
-    cursor: pointer;
-    box-shadow: 0 3px 0 rgba(0,0,0,0.12);
-    transition: all 0.15s;
-  }
-  .btn-fb:active { transform: translateY(2px); box-shadow: none; }
-  .btn-fb-3 { background: linear-gradient(135deg, #FFD700, #ffa500); color: white; }
-  .btn-fb-2 { background: linear-gradient(135deg, var(--mint), #2ec46d); color: white; }
-  .btn-fb-1 { background: linear-gradient(135deg, #FF6B6B, #ee0979); color: white; }
+  .fallback-section{display:none;margin-top:12px;background:#fff8e1;border:2px dashed #FFD93D;
+    border-radius:14px;padding:12px;}
+  .fallback-section.visible{display:block;}
+  .fallback-label{font-family:'Fredoka One',cursive;font-size:.9rem;color:#7a5c00;margin-bottom:9px;}
+  .fallback-btns{display:flex;gap:7px;justify-content:center;}
+  .btn-fb{border:none;border-radius:50px;padding:9px 16px;font-family:'Fredoka One',cursive;
+    font-size:.85rem;cursor:pointer;box-shadow:0 3px 0 rgba(0,0,0,.12);transition:all .15s;}
+  .btn-fb:active{transform:translateY(2px);box-shadow:none;}
+  .btn-fb-3{background:linear-gradient(135deg,#FFD700,#ffa500);color:white;}
+  .btn-fb-2{background:linear-gradient(135deg,var(--mint),#2ec46d);color:white;}
+  .btn-fb-1{background:linear-gradient(135deg,#FF6B6B,#ee0979);color:white;}
 
   /* Star burst */
-  .star-burst {
-    position: fixed;
-    pointer-events: none;
-    z-index: 999;
-    animation: starFly 1.2s ease forwards;
-  }
-  @keyframes starFly {
-    0% { transform: scale(0) rotate(0deg); opacity: 1; }
-    70% { transform: scale(1.4) rotate(20deg); opacity: 1; }
-    100% { transform: scale(0.5) translateY(-120px) rotate(-30deg); opacity: 0; }
-  }
+  .star-burst{position:fixed;pointer-events:none;z-index:999;animation:starFly 1.2s ease forwards;}
+  @keyframes starFly{0%{transform:scale(0) rotate(0deg);opacity:1;}70%{transform:scale(1.4) rotate(20deg);opacity:1;}100%{transform:scale(.5) translateY(-120px) rotate(-30deg);opacity:0;}}
 
   /* History */
-  .history {
-    background: white;
-    border-radius: 20px;
-    padding: 16px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-  }
-  .history h3 {
-    font-family: 'Fredoka One', cursive;
-    color: var(--dark);
-    margin-bottom: 10px;
-    font-size: 1.1rem;
-  }
-  .history-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  .history-item {
-    background: #f8f8f8;
-    border-radius: 12px;
-    padding: 6px 10px;
-    font-size: 0.85rem;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
+  .history{background:white;border-radius:20px;padding:14px;box-shadow:0 4px 15px rgba(0,0,0,.08);}
+  .history h3{font-family:'Fredoka One',cursive;color:var(--dark);margin-bottom:10px;font-size:1rem;}
+  .history-list{display:flex;flex-wrap:wrap;gap:7px;}
+  .history-item{background:#f8f8f8;border-radius:12px;padding:5px 10px;font-size:.82rem;
+    font-weight:700;display:flex;align-items:center;gap:4px;}
 
   /* Trophy */
-  .trophy-popup {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.5);
-    z-index: 1000;
-    align-items: center;
-    justify-content: center;
-  }
-  .trophy-popup.show { display: flex; }
-  .trophy-box {
-    background: white;
-    border-radius: 30px;
-    padding: 36px 28px;
-    text-align: center;
-    animation: bounceIn 0.5s ease;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-    max-width: 340px;
-    width: 90%;
-  }
-  .trophy-emoji { font-size: 5rem; display: block; animation: wiggle 1s ease infinite; }
-  .trophy-box h2 {
-    font-family: 'Fredoka One', cursive;
-    font-size: 2rem;
-    color: var(--dark);
-    margin: 10px 0 6px;
-  }
-  .trophy-box p { color: #888; font-weight: 700; }
-  /* Summary stars breakdown */
-  .summary-stars {
-    display: flex;
-    justify-content: center;
-    gap: 18px;
-    margin: 14px 0 0;
-  }
-  .summary-item {
-    text-align: center;
-    font-family: 'Fredoka One', cursive;
-  }
-  .summary-item .big { font-size: 1.8rem; }
-  .summary-item .lbl { font-size: 0.8rem; color: #aaa; }
-  .btn-restart {
-    background: linear-gradient(135deg, var(--sun), var(--peach));
-    color: white;
-    border: none;
-    border-radius: 50px;
-    padding: 14px 32px;
-    font-family: 'Fredoka One', cursive;
-    font-size: 1.2rem;
-    cursor: pointer;
-    margin-top: 18px;
-    box-shadow: 0 4px 0 rgba(0,0,0,0.15);
-  }
+  .trophy-popup{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;
+    align-items:center;justify-content:center;}
+  .trophy-popup.show{display:flex;}
+  .trophy-box{background:white;border-radius:28px;padding:32px 24px;text-align:center;
+    animation:bounceIn .5s ease;box-shadow:0 20px 60px rgba(0,0,0,.3);max-width:340px;width:90%;}
+  .trophy-emoji{font-size:4.5rem;display:block;animation:wiggle 1s ease infinite;}
+  .trophy-box h2{font-family:'Fredoka One',cursive;font-size:1.8rem;color:var(--dark);margin:8px 0 4px;}
+  .trophy-box p{color:#888;font-weight:700;}
+  .summary-stars{display:flex;justify-content:center;gap:14px;margin:12px 0 0;}
+  .summary-item{text-align:center;font-family:'Fredoka One',cursive;}
+  .summary-item .big{font-size:1.5rem;}
+  .summary-item .lbl{font-size:.75rem;color:#aaa;}
+  .btn-restart{background:linear-gradient(135deg,var(--sun),var(--peach));color:white;border:none;
+    border-radius:50px;padding:13px 28px;font-family:'Fredoka One',cursive;font-size:1.1rem;
+    cursor:pointer;margin-top:16px;box-shadow:0 4px 0 rgba(0,0,0,.15);}
 
-  @keyframes bounceIn {
-    0% { transform: scale(0.7); opacity: 0; }
-    80% { transform: scale(1.05); }
-    100% { transform: scale(1); opacity: 1; }
-  }
-  @keyframes slideUp {
-    from { transform: translateY(30px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-  }
-  @keyframes wiggle {
-    0%, 100% { transform: rotate(-5deg); }
-    50% { transform: rotate(5deg); }
-  }
+  /* Empty state */
+  .empty-state{text-align:center;padding:30px 16px;color:#aaa;font-family:'Fredoka One',cursive;font-size:1.1rem;}
+
+  @keyframes bounceIn{0%{transform:scale(.7);opacity:0;}80%{transform:scale(1.05);}100%{transform:scale(1);opacity:1;}}
+  @keyframes slideUp{from{transform:translateY(30px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+  @keyframes wiggle{0%,100%{transform:rotate(-5deg);}50%{transform:rotate(5deg);}}
 </style>
 </head>
 <body>
-
 <div class="cloud cloud1"></div>
 <div class="cloud cloud2"></div>
 <div class="cloud cloud3"></div>
 
 <div class="wrapper">
+  <!-- Header -->
   <div class="header">
     <span class="mascot">🦜</span>
     <h1>Star Speaker</h1>
-    <p>พูดให้แม่น แล้วรับดาวสูงสุด 3 ดวง! ⭐⭐⭐</p>
+    <p>เลือกหมวดแล้วพูดให้แม่น รับดาวสูงสุด 3 ดวง! ⭐⭐⭐</p>
   </div>
 
+  <!-- Level tabs -->
   <div class="levels-row">
     <button class="level-btn active" onclick="setLevel(0)">🐣<br>เริ่มต้น</button>
     <button class="level-btn" onclick="setLevel(1)">🐔<br>กลาง</button>
     <button class="level-btn" onclick="setLevel(2)">🦅<br>เก่งมาก</button>
   </div>
 
-  <!-- Total score bar -->
+  <!-- Score bar -->
   <div class="stars-bar">
     <span class="stars-label">⭐ คะแนนรวม</span>
-    <div class="progress-bar">
-      <div class="progress-fill" id="progressFill" style="width:0%"></div>
-    </div>
-    <div class="stars-count">
-      <span id="starCount">0</span> / <span id="starMax">15</span>⭐
-    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="stars-count"><span id="starCount">0</span>&nbsp;/&nbsp;<span id="starMax">15</span>⭐</div>
   </div>
 
-  <!-- Word Card -->
-  <div class="card" id="wordCard">
-    <div class="level-badge" id="levelBadge">ระดับเริ่มต้น 🐣</div>
+  <!-- Category selector -->
+  <div class="cat-section">
+    <h3>🗂️ เลือกหมวดหมู่</h3>
+    <div class="cat-grid" id="catGrid"></div>
+  </div>
+
+  <!-- Word card -->
+  <div class="card" id="wordCard" style="display:none">
+    <div class="card-top">
+      <span class="level-badge" id="levelBadge">เริ่มต้น 🐣</span>
+      <span class="cat-badge" id="catBadge">สัตว์ 🐾</span>
+    </div>
     <span class="word-emoji" id="wordEmoji">🐱</span>
     <div class="word-display" id="wordDisplay">CAT</div>
     <div class="word-phonetic" id="wordPhonetic">แคท</div>
     <div class="word-thai" id="wordThai">แมว</div>
 
-    <!-- Attempt dots (3 tries per word) -->
     <div class="attempt-indicator" id="attemptDots">
       <div class="attempt-dot active" id="dot0"></div>
       <div class="attempt-dot" id="dot1"></div>
       <div class="attempt-dot" id="dot2"></div>
     </div>
 
-    <button class="btn-listen" onclick="speakWord()">🔊 ฟังเสียง</button>
-    <br>
+    <button class="btn-listen" onclick="speakWord()">🔊 ฟังเสียง</button><br>
     <button class="btn-record" id="btnRecord" onclick="startRecording()">
-      <span class="mic-icon">🎤</span>
+      <span style="font-size:1.3rem">🎤</span>
       <span class="mic-wave">🎵</span>
       <span id="recordLabel">กดแล้วพูดเลย!</span>
     </button>
     <div class="speak-hint" id="speakHint">กดปุ่มแดง แล้วพูดคำนั้นออกมาดังๆ 😊</div>
 
-    <!-- Fallback manual rating -->
     <div class="fallback-section" id="fallbackSection">
       <div class="fallback-label">🎤 ไม่พบไมโครโฟน — ให้คะแนนตัวเองนะ!</div>
       <div class="fallback-btns">
@@ -590,18 +259,16 @@
       </div>
     </div>
 
-    <!-- Result -->
     <div class="result-box" id="resultBox">
       <div class="star-rating-display">
         <span class="rating-star" id="rs1">⭐</span>
         <span class="rating-star" id="rs2">⭐</span>
         <span class="rating-star" id="rs3">⭐</span>
       </div>
-      <div class="result-title" id="resultTitle">เก่งมาก!</div>
+      <div class="result-title" id="resultTitle"></div>
       <div class="result-subtitle" id="resultSubtitle"></div>
       <div class="result-spoken" id="resultSpoken"></div>
     </div>
-
     <button class="btn-next" id="btnNext" onclick="nextWord()">คำต่อไป ➡️</button>
   </div>
 
@@ -612,134 +279,314 @@
   </div>
 </div>
 
-<!-- Trophy popup -->
+<!-- Trophy -->
 <div class="trophy-popup" id="trophyPopup">
   <div class="trophy-box">
     <span class="trophy-emoji" id="trophyEmoji">🏆</span>
     <h2 id="trophyTitle">เก่งมากเลย!</h2>
     <p id="trophyMsg"></p>
     <div class="summary-stars" id="summaryStars"></div>
-    <button class="btn-restart" onclick="resetGame()">เล่นอีกรอบ! 🔄</button>
+    <button class="btn-restart" onclick="resetRound()">เล่นอีกรอบ! 🔄</button>
   </div>
 </div>
 
 <script>
+// =========================================================
+// DATA — หมวดหมู่ทั้งหมด 3 ระดับ
+// =========================================================
+const CATEGORIES = {
+  animals: {
+    name:'สัตว์', emoji:'🐾',
+    easy:[
+      {word:'CAT',emoji:'🐱',thai:'แมว',phonetic:'แคท'},
+      {word:'DOG',emoji:'🐶',thai:'หมา',phonetic:'ด็อก'},
+      {word:'FISH',emoji:'🐟',thai:'ปลา',phonetic:'ฟิช'},
+      {word:'BIRD',emoji:'🐦',thai:'นก',phonetic:'เบิร์ด'},
+      {word:'COW',emoji:'🐮',thai:'วัว',phonetic:'คาว'},
+      {word:'PIG',emoji:'🐷',thai:'หมู',phonetic:'พิก'},
+    ],
+    medium:[
+      {word:'RABBIT',emoji:'🐰',thai:'กระต่าย',phonetic:'แรบบิท'},
+      {word:'MONKEY',emoji:'🐒',thai:'ลิง',phonetic:'มังกี้'},
+      {word:'TIGER',emoji:'🐯',thai:'เสือ',phonetic:'ไทเกอร์'},
+      {word:'HORSE',emoji:'🐴',thai:'ม้า',phonetic:'ฮอร์ส'},
+      {word:'SNAKE',emoji:'🐍',thai:'งู',phonetic:'สเนค'},
+      {word:'FROG',emoji:'🐸',thai:'กบ',phonetic:'ฟร็อก'},
+    ],
+    hard:[
+      {word:'ELEPHANT',emoji:'🐘',thai:'ช้าง',phonetic:'เอเลแฟนท์'},
+      {word:'BUTTERFLY',emoji:'🦋',thai:'ผีเสื้อ',phonetic:'บัตเตอร์ฟลาย'},
+      {word:'DINOSAUR',emoji:'🦕',thai:'ไดโนเสาร์',phonetic:'ไดโนซอร์'},
+      {word:'CROCODILE',emoji:'🐊',thai:'จระเข้',phonetic:'ครอคโคไดล์'},
+      {word:'PENGUIN',emoji:'🐧',thai:'เพนกวิน',phonetic:'เพ็งกวิน'},
+      {word:'GIRAFFE',emoji:'🦒',thai:'ยีราฟ',phonetic:'จิราฟ'},
+    ],
+  },
+  colors: {
+    name:'สี', emoji:'🎨',
+    easy:[
+      {word:'RED',emoji:'🔴',thai:'สีแดง',phonetic:'เรด'},
+      {word:'BLUE',emoji:'🔵',thai:'สีน้ำเงิน',phonetic:'บลู'},
+      {word:'GREEN',emoji:'🟢',thai:'สีเขียว',phonetic:'กรีน'},
+      {word:'PINK',emoji:'🩷',thai:'สีชมพู',phonetic:'พิงค์'},
+      {word:'BLACK',emoji:'⚫',thai:'สีดำ',phonetic:'แบล็ค'},
+      {word:'WHITE',emoji:'⚪',thai:'สีขาว',phonetic:'ไวท์'},
+    ],
+    medium:[
+      {word:'ORANGE',emoji:'🟠',thai:'สีส้ม',phonetic:'ออเรนจ์'},
+      {word:'YELLOW',emoji:'🟡',thai:'สีเหลือง',phonetic:'เยลโล่'},
+      {word:'PURPLE',emoji:'🟣',thai:'สีม่วง',phonetic:'เพอร์เพิล'},
+      {word:'BROWN',emoji:'🟤',thai:'สีน้ำตาล',phonetic:'บราวน์'},
+      {word:'GREY',emoji:'🩶',thai:'สีเทา',phonetic:'เกรย์'},
+      {word:'GOLD',emoji:'🌟',thai:'สีทอง',phonetic:'โกลด์'},
+    ],
+    hard:[
+      {word:'TURQUOISE',emoji:'🩵',thai:'สีเขียวอมน้ำเงิน',phonetic:'เทอร์คอยส์'},
+      {word:'VIOLET',emoji:'💜',thai:'สีม่วงอมน้ำเงิน',phonetic:'ไวโอเลต'},
+      {word:'CRIMSON',emoji:'❤️',thai:'สีแดงเข้ม',phonetic:'คริมสัน'},
+      {word:'INDIGO',emoji:'💙',thai:'สีคราม',phonetic:'อินดิโก้'},
+      {word:'SCARLET',emoji:'🌹',thai:'สีแดงสด',phonetic:'สการ์เลต'},
+      {word:'MAGENTA',emoji:'💗',thai:'สีชมพูอมม่วง',phonetic:'มาเจนต้า'},
+    ],
+  },
+  items: {
+    name:'ของใช้', emoji:'🎒',
+    easy:[
+      {word:'BAG',emoji:'👜',thai:'กระเป๋า',phonetic:'แบ็ก'},
+      {word:'CUP',emoji:'☕',thai:'แก้ว',phonetic:'คัพ'},
+      {word:'BOOK',emoji:'📚',thai:'หนังสือ',phonetic:'บุ๊ค'},
+      {word:'PEN',emoji:'✏️',thai:'ปากกา',phonetic:'เพ็น'},
+      {word:'BALL',emoji:'⚽',thai:'ลูกบอล',phonetic:'บอล'},
+      {word:'BED',emoji:'🛏️',thai:'เตียง',phonetic:'เบ็ด'},
+    ],
+    medium:[
+      {word:'CHAIR',emoji:'🪑',thai:'เก้าอี้',phonetic:'แชร์'},
+      {word:'CLOCK',emoji:'🕐',thai:'นาฬิกา',phonetic:'คล็อค'},
+      {word:'PHONE',emoji:'📱',thai:'โทรศัพท์',phonetic:'โฟน'},
+      {word:'MIRROR',emoji:'🪞',thai:'กระจก',phonetic:'มิเรอร์'},
+      {word:'PENCIL',emoji:'✏️',thai:'ดินสอ',phonetic:'เพ็นซิล'},
+      {word:'BOTTLE',emoji:'🍶',thai:'ขวด',phonetic:'บ็อทเทิล'},
+    ],
+    hard:[
+      {word:'UMBRELLA',emoji:'☂️',thai:'ร่ม',phonetic:'อัมเบรลล่า'},
+      {word:'SCISSORS',emoji:'✂️',thai:'กรรไกร',phonetic:'ซิซเซอร์ส'},
+      {word:'CALENDAR',emoji:'📅',thai:'ปฏิทิน',phonetic:'แคเลนดาร์'},
+      {word:'CALCULATOR',emoji:'🧮',thai:'เครื่องคิดเลข',phonetic:'แคลคิวเลเตอร์'},
+      {word:'TELESCOPE',emoji:'🔭',thai:'กล้องโทรทรรศน์',phonetic:'เทเลสโคป'},
+      {word:'MICROSCOPE',emoji:'🔬',thai:'กล้องจุลทรรศน์',phonetic:'ไมโครสโคป'},
+    ],
+  },
+  greetings: {
+    name:'ทักทาย', emoji:'👋',
+    easy:[
+      {word:'HELLO',emoji:'👋',thai:'สวัสดี',phonetic:'เฮลโล่'},
+      {word:'HI',emoji:'😊',thai:'หวัดดี',phonetic:'ไฮ'},
+      {word:'BYE',emoji:'👋',thai:'ลาก่อน',phonetic:'บาย'},
+      {word:'YES',emoji:'✅',thai:'ใช่',phonetic:'เยส'},
+      {word:'NO',emoji:'❌',thai:'ไม่',phonetic:'โน'},
+      {word:'OK',emoji:'👌',thai:'โอเค',phonetic:'โอเค'},
+    ],
+    medium:[
+      {word:'PLEASE',emoji:'🙏',thai:'กรุณา/ขอด้วย',phonetic:'พลีส'},
+      {word:'SORRY',emoji:'😔',thai:'ขอโทษ',phonetic:'ซอร์รี่'},
+      {word:'THANKS',emoji:'🙏',thai:'ขอบคุณ',phonetic:'แทงค์ส'},
+      {word:'WELCOME',emoji:'🤗',thai:'ยินดีต้อนรับ',phonetic:'เวลคัม'},
+      {word:'EXCUSE ME',emoji:'🙋',thai:'ขอโทษนะ',phonetic:'เอ็กซ์คิวส์มี'},
+      {word:'GOOD NIGHT',emoji:'🌙',thai:'ราตรีสวัสดิ์',phonetic:'กู๊ดไนท์'},
+    ],
+    hard:[
+      {word:'HOW ARE YOU',emoji:'🤝',thai:'เป็นยังไงบ้าง',phonetic:'ฮาวอาร์ยู'},
+      {word:'NICE TO MEET YOU',emoji:'😄',thai:'ยินดีที่รู้จัก',phonetic:'ไนส์ทูมีทยู'},
+      {word:'HAVE A GOOD DAY',emoji:'☀️',thai:'ขอให้มีวันที่ดี',phonetic:'แฮฟอะกู๊ดเดย์'},
+      {word:'SEE YOU LATER',emoji:'👋',thai:'แล้วเจอกัน',phonetic:'ซียูเลเตอร์'},
+      {word:'GOOD MORNING',emoji:'🌅',thai:'อรุณสวัสดิ์',phonetic:'กู๊ดมอร์นิ่ง'},
+      {word:'GOOD EVENING',emoji:'🌆',thai:'สายัณห์สวัสดิ์',phonetic:'กู๊ดอีฟนิ่ง'},
+    ],
+  },
+  feelings: {
+    name:'ความรู้สึก', emoji:'😊',
+    easy:[
+      {word:'HAPPY',emoji:'😊',thai:'มีความสุข',phonetic:'แฮบปี้'},
+      {word:'SAD',emoji:'😢',thai:'เศร้า',phonetic:'แซด'},
+      {word:'MAD',emoji:'😠',thai:'โกรธ',phonetic:'แมด'},
+      {word:'SCARED',emoji:'😨',thai:'กลัว',phonetic:'สแคร์ด'},
+      {word:'TIRED',emoji:'😴',thai:'เหนื่อย',phonetic:'ไทร์ด'},
+      {word:'HUNGRY',emoji:'🤤',thai:'หิว',phonetic:'ฮังกรี'},
+    ],
+    medium:[
+      {word:'EXCITED',emoji:'🤩',thai:'ตื่นเต้น',phonetic:'เอ็กไซเต็ด'},
+      {word:'NERVOUS',emoji:'😰',thai:'กังวล',phonetic:'เนอร์วัส'},
+      {word:'BORED',emoji:'😑',thai:'เบื่อ',phonetic:'บอร์ด'},
+      {word:'PROUD',emoji:'🥹',thai:'ภูมิใจ',phonetic:'พราวด์'},
+      {word:'LONELY',emoji:'🥺',thai:'โดดเดี่ยว',phonetic:'โลนลี่'},
+      {word:'SURPRISED',emoji:'😲',thai:'ประหลาดใจ',phonetic:'เซอร์ไพรซ์ด'},
+    ],
+    hard:[
+      {word:'FRUSTRATED',emoji:'😤',thai:'หัวร้อน/หงุดหงิด',phonetic:'ฟรัสเตรเต็ด'},
+      {word:'EMBARRASSED',emoji:'😳',thai:'อาย/ขายหน้า',phonetic:'เอ็มแบเรสด์'},
+      {word:'DISAPPOINTED',emoji:'😞',thai:'ผิดหวัง',phonetic:'ดิสอะพอยน์เต็ด'},
+      {word:'OVERWHELMED',emoji:'🫠',thai:'รู้สึกท่วมท้น',phonetic:'โอเวอร์เวล์มด์'},
+      {word:'GRATEFUL',emoji:'🥰',thai:'รู้สึกขอบคุณ',phonetic:'เกรทฟูล'},
+      {word:'CONFIDENT',emoji:'😎',thai:'มั่นใจ',phonetic:'คอนฟิเดนท์'},
+    ],
+  },
+  vehicles: {
+    name:'ยานพาหนะ', emoji:'🚗',
+    easy:[
+      {word:'CAR',emoji:'🚗',thai:'รถยนต์',phonetic:'คาร์'},
+      {word:'BUS',emoji:'🚌',thai:'รถบัส',phonetic:'บัส'},
+      {word:'BOAT',emoji:'⛵',thai:'เรือ',phonetic:'โบ๊ท'},
+      {word:'BIKE',emoji:'🚲',thai:'จักรยาน',phonetic:'ไบค์'},
+      {word:'PLANE',emoji:'✈️',thai:'เครื่องบิน',phonetic:'เพลน'},
+      {word:'TRAIN',emoji:'🚂',thai:'รถไฟ',phonetic:'เทรน'},
+    ],
+    medium:[
+      {word:'TRUCK',emoji:'🚚',thai:'รถบรรทุก',phonetic:'ทรัค'},
+      {word:'ROCKET',emoji:'🚀',thai:'จรวด',phonetic:'ร็อคเก็ต'},
+      {word:'TRACTOR',emoji:'🚜',thai:'รถแทรกเตอร์',phonetic:'แทรคเตอร์'},
+      {word:'TAXI',emoji:'🚕',thai:'แท็กซี่',phonetic:'แท็กซี่'},
+      {word:'FERRY',emoji:'⛴️',thai:'เรือข้ามฟาก',phonetic:'เฟอร์รี่'},
+      {word:'SCOOTER',emoji:'🛵',thai:'สกู๊ตเตอร์',phonetic:'สกู๊ตเตอร์'},
+    ],
+    hard:[
+      {word:'HELICOPTER',emoji:'🚁',thai:'เฮลิคอปเตอร์',phonetic:'เฮลิคอปเตอร์'},
+      {word:'SUBMARINE',emoji:'🤿',thai:'เรือดำน้ำ',phonetic:'ซับมารีน'},
+      {word:'AMBULANCE',emoji:'🚑',thai:'รถพยาบาล',phonetic:'แอมบิวแลนซ์'},
+      {word:'SPACECRAFT',emoji:'🛸',thai:'ยานอวกาศ',phonetic:'สเปซคราฟท์'},
+      {word:'MOTORCYCLE',emoji:'🏍️',thai:'มอเตอร์ไซค์',phonetic:'โมเตอร์ไซเคิล'},
+      {word:'FIRE TRUCK',emoji:'🚒',thai:'รถดับเพลิง',phonetic:'ไฟร์ทรัค'},
+    ],
+  },
+  days: {
+    name:'วัน', emoji:'📅',
+    easy:[
+      {word:'MONDAY',emoji:'1️⃣',thai:'วันจันทร์',phonetic:'มันเดย์'},
+      {word:'TUESDAY',emoji:'2️⃣',thai:'วันอังคาร',phonetic:'ทิวส์เดย์'},
+      {word:'WEDNESDAY',emoji:'3️⃣',thai:'วันพุธ',phonetic:'เวนส์เดย์'},
+      {word:'THURSDAY',emoji:'4️⃣',thai:'วันพฤหัส',phonetic:'เธิร์สเดย์'},
+      {word:'FRIDAY',emoji:'5️⃣',thai:'วันศุกร์',phonetic:'ฟรายเดย์'},
+      {word:'SATURDAY',emoji:'6️⃣',thai:'วันเสาร์',phonetic:'แซตเทอร์เดย์'},
+    ],
+    medium:[
+      {word:'SUNDAY',emoji:'7️⃣',thai:'วันอาทิตย์',phonetic:'ซันเดย์'},
+      {word:'WEEKEND',emoji:'🎉',thai:'วันหยุดสุดสัปดาห์',phonetic:'วีเคนด์'},
+      {word:'WEEKDAY',emoji:'💼',thai:'วันทำงาน',phonetic:'วีคเดย์'},
+      {word:'TODAY',emoji:'📌',thai:'วันนี้',phonetic:'ทูเดย์'},
+      {word:'TOMORROW',emoji:'➡️',thai:'พรุ่งนี้',phonetic:'ทูมอร์โรว์'},
+      {word:'YESTERDAY',emoji:'⬅️',thai:'เมื่อวาน',phonetic:'เยสเทอร์เดย์'},
+    ],
+    hard:[
+      {word:'FORTNIGHT',emoji:'📆',thai:'สองสัปดาห์',phonetic:'ฟอร์ทไนท์'},
+      {word:'ANNIVERSARY',emoji:'🎊',thai:'วันครบรอบ',phonetic:'แอนนิเวอร์ซารี'},
+      {word:'HOLIDAY',emoji:'🏖️',thai:'วันหยุด',phonetic:'ฮอลิเดย์'},
+      {word:'DEADLINE',emoji:'⏰',thai:'กำหนดเวลา',phonetic:'เดดไลน์'},
+      {word:'SCHEDULE',emoji:'🗓️',thai:'ตารางเวลา',phonetic:'เชดดิวล์'},
+      {word:'APPOINTMENT',emoji:'📋',thai:'นัดหมาย',phonetic:'อะพอยน์เม้นท์'},
+    ],
+  },
+  months: {
+    name:'เดือน', emoji:'🗓️',
+    easy:[
+      {word:'JANUARY',emoji:'❄️',thai:'มกราคม',phonetic:'แจนนิวารี'},
+      {word:'FEBRUARY',emoji:'💝',thai:'กุมภาพันธ์',phonetic:'เฟบรัวรี'},
+      {word:'MARCH',emoji:'🌱',thai:'มีนาคม',phonetic:'มาร์ช'},
+      {word:'APRIL',emoji:'🌸',thai:'เมษายน',phonetic:'เอพริล'},
+      {word:'MAY',emoji:'🌻',thai:'พฤษภาคม',phonetic:'เมย์'},
+      {word:'JUNE',emoji:'☀️',thai:'มิถุนายน',phonetic:'จูน'},
+    ],
+    medium:[
+      {word:'JULY',emoji:'🎆',thai:'กรกฎาคม',phonetic:'จูลาย'},
+      {word:'AUGUST',emoji:'🏖️',thai:'สิงหาคม',phonetic:'ออกัสท์'},
+      {word:'SEPTEMBER',emoji:'🍂',thai:'กันยายน',phonetic:'เซปเทมเบอร์'},
+      {word:'OCTOBER',emoji:'🎃',thai:'ตุลาคม',phonetic:'อ็อคโทเบอร์'},
+      {word:'NOVEMBER',emoji:'🍁',thai:'พฤศจิกายน',phonetic:'โนเวมเบอร์'},
+      {word:'DECEMBER',emoji:'🎄',thai:'ธันวาคม',phonetic:'ดิเซมเบอร์'},
+    ],
+    hard:[
+      {word:'QUARTER',emoji:'📊',thai:'ไตรมาส',phonetic:'ควอเตอร์'},
+      {word:'SEMESTER',emoji:'🎓',thai:'ภาคการศึกษา',phonetic:'เซเมสเตอร์'},
+      {word:'FISCAL YEAR',emoji:'💹',thai:'ปีการเงิน',phonetic:'ฟิสคัลเยียร์'},
+      {word:'MILLENNIUM',emoji:'🌏',thai:'สหัสวรรษ',phonetic:'มิลเลนเนียม'},
+      {word:'DECADE',emoji:'🔟',thai:'ทศวรรษ',phonetic:'ดีเคด'},
+      {word:'CENTURY',emoji:'🏛️',thai:'ศตวรรษ',phonetic:'เซนจูรี่'},
+    ],
+  },
+};
+
 const WORDS_PER_ROUND = 5;
-const MAX_SCORE = WORDS_PER_ROUND * 3; // 15
+const LEVEL_KEYS = ['easy','medium','hard'];
+const LEVEL_NAMES = ['เริ่มต้น 🐣','กลาง 🐔','เก่งมาก 🦅'];
 
-const levels = [
-  {
-    name: 'ระดับเริ่มต้น 🐣',
-    words: [
-      { word: 'CAT', emoji: '🐱', thai: 'แมว', phonetic: 'แคท' },
-      { word: 'DOG', emoji: '🐶', thai: 'หมา', phonetic: 'ด็อก' },
-      { word: 'SUN', emoji: '☀️', thai: 'ดวงอาทิตย์', phonetic: 'ซัน' },
-      { word: 'FISH', emoji: '🐟', thai: 'ปลา', phonetic: 'ฟิช' },
-      { word: 'BIRD', emoji: '🐦', thai: 'นก', phonetic: 'เบิร์ด' },
-      { word: 'CAKE', emoji: '🎂', thai: 'เค้ก', phonetic: 'เค้ก' },
-      { word: 'BALL', emoji: '⚽', thai: 'ลูกบอล', phonetic: 'บอล' },
-      { word: 'STAR', emoji: '⭐', thai: 'ดาว', phonetic: 'สตาร์' },
-    ]
-  },
-  {
-    name: 'ระดับกลาง 🐔',
-    words: [
-      { word: 'APPLE', emoji: '🍎', thai: 'แอปเปิ้ล', phonetic: 'แอ็บเปิ้ล' },
-      { word: 'HAPPY', emoji: '😊', thai: 'มีความสุข', phonetic: 'แฮบปี้' },
-      { word: 'WATER', emoji: '💧', thai: 'น้ำ', phonetic: 'วอเทอร์' },
-      { word: 'ORANGE', emoji: '🍊', thai: 'ส้ม', phonetic: 'ออเรนจ์' },
-      { word: 'FLOWER', emoji: '🌸', thai: 'ดอกไม้', phonetic: 'ฟลาวเวอร์' },
-      { word: 'MONKEY', emoji: '🐒', thai: 'ลิง', phonetic: 'มังกี้' },
-      { word: 'YELLOW', emoji: '💛', thai: 'สีเหลือง', phonetic: 'เยลโล่' },
-      { word: 'RABBIT', emoji: '🐰', thai: 'กระต่าย', phonetic: 'แรบบิท' },
-    ]
-  },
-  {
-    name: 'ระดับเก่งมาก 🦅',
-    words: [
-      { word: 'ELEPHANT', emoji: '🐘', thai: 'ช้าง', phonetic: 'เอเลแฟนท์' },
-      { word: 'BUTTERFLY', emoji: '🦋', thai: 'ผีเสื้อ', phonetic: 'บัตเตอร์ฟลาย' },
-      { word: 'CHOCOLATE', emoji: '🍫', thai: 'ช็อกโกแลต', phonetic: 'ช็อกโกเลต' },
-      { word: 'BEAUTIFUL', emoji: '✨', thai: 'สวยงาม', phonetic: 'บิวทิฟูล' },
-      { word: 'DINOSAUR', emoji: '🦕', thai: 'ไดโนเสาร์', phonetic: 'ไดโนซอร์' },
-      { word: 'STRAWBERRY', emoji: '🍓', thai: 'สตรอว์เบอร์รี', phonetic: 'สตรอเบอร์รี' },
-      { word: 'ADVENTURE', emoji: '🗺️', thai: 'การผจญภัย', phonetic: 'แอดเวนเจอร์' },
-      { word: 'WONDERFUL', emoji: '🌈', thai: 'วิเศษมาก', phonetic: 'วันเดอร์ฟูล' },
-    ]
-  }
-];
-
-// State
 let currentLevel = 0;
+let currentCatKey = null;
 let wordQueue = [];
 let currentIndex = 0;
 let totalStars = 0;
-let attemptNo = 0;      // 0,1,2 — which attempt we're on (for 3-star logic)
+let attemptNo = 0;
 let wordDone = false;
 let history = [];
 let recognition = null;
 let isRecording = false;
 let hasMic = false;
 
-// ---- Rating logic ----
-// attempt 0 → can get 3 stars
-// attempt 1 → can get 2 stars
-// attempt 2 → can get 1 star
-// after 3 failed attempts → 0 stars, show next
-
-function computeRating(spoken, target, attempt) {
-  const s = spoken.toUpperCase();
-  const t = target.toUpperCase();
-  const exact = s === t || s.includes(t);
-  const sim = charSimilarity(s, t);
-
-  if (exact || sim >= 0.85) {
-    return 3 - attempt; // 3, 2, or 1
-  } else if (sim >= 0.55) {
-    return Math.max(1, 2 - attempt);
-  } else {
-    return 0; // miss → try again (unless last attempt)
-  }
+// ---- Render category grid ----
+function renderCatGrid() {
+  const grid = document.getElementById('catGrid');
+  grid.innerHTML = '';
+  Object.entries(CATEGORIES).forEach(([key, cat]) => {
+    const btn = document.createElement('button');
+    btn.className = 'cat-btn' + (key === currentCatKey ? ' active' : '');
+    btn.innerHTML = `<span class="cat-emoji">${cat.emoji}</span><span class="cat-name">${cat.name}</span>`;
+    btn.onclick = () => selectCategory(key);
+    grid.appendChild(btn);
+  });
 }
 
-function charSimilarity(a, b) {
-  if (!a || !b) return 0;
-  const setA = new Set(a.replace(/\s/g,'').split(''));
-  const setB = new Set(b.replace(/\s/g,'').split(''));
-  const inter = [...setA].filter(c => setB.has(c)).length;
-  return inter / Math.max(setA.size, setB.size);
+function selectCategory(key) {
+  currentCatKey = key;
+  renderCatGrid();
+  startRound();
 }
-
-// ---- Setup ----
-function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
 
 function setLevel(lvl) {
   currentLevel = lvl;
   document.querySelectorAll('.level-btn').forEach((b,i) => b.classList.toggle('active', i===lvl));
-  document.getElementById('levelBadge').textContent = levels[lvl].name;
-  wordQueue = shuffle(levels[lvl].words).slice(0, WORDS_PER_ROUND);
+  if (currentCatKey) startRound();
+}
+
+function startRound() {
+  const cat = CATEGORIES[currentCatKey];
+  const pool = cat[LEVEL_KEYS[currentLevel]];
+  wordQueue = shuffle(pool).slice(0, WORDS_PER_ROUND);
   currentIndex = 0;
   totalStars = 0;
   history = [];
   updateScoreBar();
-  showWord();
   document.getElementById('historySection').style.display = 'none';
   document.getElementById('historyList').innerHTML = '';
+  document.getElementById('wordCard').style.display = 'block';
+  showWord();
 }
+
+function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
 
 function showWord() {
   if (currentIndex >= wordQueue.length) { showTrophy(); return; }
   attemptNo = 0;
   wordDone = false;
   const w = wordQueue[currentIndex];
+  const cat = CATEGORIES[currentCatKey];
   document.getElementById('wordDisplay').textContent = w.word;
   document.getElementById('wordEmoji').textContent = w.emoji;
   document.getElementById('wordThai').textContent = w.thai;
   document.getElementById('wordPhonetic').textContent = w.phonetic;
+  document.getElementById('levelBadge').textContent = LEVEL_NAMES[currentLevel];
+  document.getElementById('catBadge').textContent = cat.emoji + ' ' + cat.name;
   resetResultUI();
   updateAttemptDots();
-  document.getElementById('wordCard').style.animation = 'none';
-  setTimeout(() => document.getElementById('wordCard').style.animation = 'slideUp 0.4s ease', 10);
+  const card = document.getElementById('wordCard');
+  card.style.animation = 'none';
+  setTimeout(() => card.style.animation = 'slideUp .4s ease', 10);
 }
 
 function resetResultUI() {
@@ -753,7 +600,7 @@ function resetResultUI() {
 }
 
 function updateAttemptDots() {
-  for (let i=0; i<3; i++) {
+  for (let i=0;i<3;i++) {
     const d = document.getElementById('dot'+i);
     d.className = 'attempt-dot';
     if (i < attemptNo) d.classList.add('used');
@@ -789,11 +636,11 @@ function setupRecognition() {
 
 function startRecording() {
   if (wordDone) return;
-  if (isRecording) { if (recognition) recognition.stop(); stopRecordingUI(); return; }
+  if (isRecording) { if(recognition) recognition.stop(); stopRecordingUI(); return; }
   if (!hasMic) hasMic = setupRecognition();
   if (!hasMic || !recognition) { showFallback(); return; }
-
   isRecording = true;
+  playSoundRecord();
   document.getElementById('btnRecord').classList.add('recording');
   document.getElementById('recordLabel').textContent = 'กำลังฟัง... พูดเลย!';
   document.getElementById('speakHint').textContent = '🎵 กำลังฟังเสียงคุณอยู่...';
@@ -812,35 +659,144 @@ function showFallback() {
   document.getElementById('speakHint').textContent = 'ไม่พบไมโครโฟน — ให้คะแนนตัวเองนะ 😊';
 }
 
-// ---- Core rating ----
+// ---- Rating ----
+function charSimilarity(a, b) {
+  if (!a||!b) return 0;
+  const sA = new Set(a.replace(/\s/g,'').split(''));
+  const sB = new Set(b.replace(/\s/g,'').split(''));
+  const inter = [...sA].filter(c=>sB.has(c)).length;
+  return inter / Math.max(sA.size, sB.size);
+}
+
+function computeRating(spoken, target, attempt) {
+  const s = spoken.toUpperCase().trim();
+  const t = target.toUpperCase().trim();
+  const exact = s === t || s.includes(t);
+  const sim = charSimilarity(s, t);
+  if (exact || sim >= 0.85) return 3 - attempt;
+  if (sim >= 0.55) return Math.max(1, 2 - attempt);
+  return 0;
+}
+
 function processSpoken(spoken) {
   const target = wordQueue[currentIndex].word;
   const rating = computeRating(spoken, target, attemptNo);
-
   if (rating > 0) {
     handleRating(rating, spoken);
   } else {
-    // miss — increment attempt
     attemptNo++;
     updateAttemptDots();
     if (attemptNo >= 3) {
-      handleRating(0, spoken); // out of tries
+      handleRating(0, spoken);
     } else {
-      // show "try again" nudge
-      showTryAgain(spoken);
+      playSoundRetry();
+      const hints = ['😅 เกือบแล้ว! ลองอีกครั้งนะ','💪 ใกล้มาก! พูดให้ชัดขึ้น','🎯 ฟังเสียงแล้วลองใหม่!'];
+      document.getElementById('speakHint').textContent =
+        (spoken ? `ได้ยินว่า "${spoken}" — ` : '') + hints[attemptNo-1];
     }
   }
 }
 
-function showTryAgain(spoken) {
-  const hints = [
-    '😅 เกือบแล้ว! ลองอีกครั้งนะ',
-    '💪 ใกล้มากแล้ว! พูดให้ชัดขึ้นอีกหน่อย',
-    '🎯 ฟังเสียงอีกครั้ง แล้วลองใหม่!',
-  ];
-  document.getElementById('speakHint').textContent =
-    (spoken ? `ได้ยินว่า "${spoken}" — ` : '') + hints[attemptNo-1];
+// =========================================================
+// SOUND ENGINE — Web Audio API (ไม่ต้องโหลดไฟล์)
+// =========================================================
+let audioCtx = null;
+function getAudio() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
 }
+
+function playTone(freq, type, start, duration, vol=0.3) {
+  const ctx = getAudio();
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.connect(gain); gain.connect(ctx.destination);
+  osc.type = type;
+  osc.frequency.setValueAtTime(freq, ctx.currentTime + start);
+  gain.gain.setValueAtTime(0, ctx.currentTime + start);
+  gain.gain.linearRampToValueAtTime(vol, ctx.currentTime + start + 0.01);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + start + duration);
+  osc.start(ctx.currentTime + start);
+  osc.stop(ctx.currentTime + start + duration + 0.05);
+}
+
+function playNoise(start, duration, vol=0.15) {
+  const ctx = getAudio();
+  const bufSize = ctx.sampleRate * duration;
+  const buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
+  const data = buf.getChannelData(0);
+  for (let i=0; i<bufSize; i++) data[i] = Math.random()*2-1;
+  const src = ctx.createBufferSource();
+  src.buffer = buf;
+  const filter = ctx.createBiquadFilter();
+  filter.type = 'bandpass'; filter.frequency.value = 1200; filter.Q.value = 0.5;
+  const gain = ctx.createGain();
+  src.connect(filter); filter.connect(gain); gain.connect(ctx.destination);
+  gain.gain.setValueAtTime(vol, ctx.currentTime + start);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + start + duration);
+  src.start(ctx.currentTime + start);
+  src.stop(ctx.currentTime + start + duration + 0.05);
+}
+
+// 3 ดาว — แตรฉลองขึ้นโน้ต + เอฟเฟคระยิบระยับ
+function playSound3Stars() {
+  // chord fanfare C-E-G ขึ้นไป
+  const notes = [523,659,784,1047];
+  notes.forEach((f,i) => {
+    playTone(f,'sine', i*0.12, 0.3, 0.35);
+    playTone(f*2,'triangle', i*0.12+0.05, 0.15, 0.12);
+  });
+  // เสียงระยิบ
+  [0.55,0.65,0.75,0.85].forEach(t => playNoise(t, 0.08, 0.12));
+  // โน้ตปิดท้ายสูง
+  playTone(1568,'sine', 0.62, 0.4, 0.3);
+  playTone(2093,'triangle', 0.72, 0.3, 0.2);
+}
+
+// 2 ดาว — เสียงขึ้น 2 โน้ต สดใส
+function playSound2Stars() {
+  playTone(440,'sine', 0, 0.2, 0.3);
+  playTone(554,'sine', 0.15, 0.2, 0.3);
+  playTone(659,'sine', 0.30, 0.35, 0.35);
+  playTone(880,'triangle', 0.35, 0.25, 0.18);
+  playNoise(0.55, 0.07, 0.08);
+}
+
+// 1 ดาว — เสียงกระดิ่งเดี่ยวๆ
+function playSound1Star() {
+  playTone(523,'sine', 0, 0.15, 0.25);
+  playTone(392,'triangle', 0.18, 0.3, 0.2);
+  playNoise(0.1, 0.06, 0.06);
+}
+
+// 0 ดาว — เสียงต่ำลง น่าเสียดาย
+function playSound0Stars() {
+  playTone(330,'sawtooth', 0, 0.15, 0.2);
+  playTone(277,'sawtooth', 0.18, 0.15, 0.2);
+  playTone(220,'sawtooth', 0.36, 0.25, 0.18);
+}
+
+// เสียงพยายามใหม่
+function playSoundRetry() {
+  playTone(440,'sine', 0, 0.1, 0.15);
+  playTone(370,'sine', 0.12, 0.15, 0.12);
+}
+
+// เสียงกดบันทึกเสียง
+function playSoundRecord() {
+  playTone(880,'sine', 0, 0.06, 0.15);
+  playTone(1108,'sine', 0.06, 0.06, 0.1);
+}
+
+// เสียงถ้วยรางวัล
+function playSoundTrophy() {
+  [523,659,784,659,784,1047,1175,1568].forEach((f,i) => {
+    playTone(f,'sine', i*0.1, 0.18, 0.3);
+  });
+  [0.85,0.95,1.05].forEach(t => playNoise(t, 0.1, 0.15));
+}
+
+// =========================================================
 
 function handleRating(rating, spoken='') {
   wordDone = true;
@@ -848,26 +804,25 @@ function handleRating(rating, spoken='') {
   totalStars += rating;
   updateScoreBar();
 
-  // Light up stars with delay
-  const rb = document.getElementById('resultBox');
-  rb.className = 'result-box rating-' + rating + ' show';
+  // เล่นเสียงตามดาวที่ได้
+  if      (rating === 3) playSound3Stars();
+  else if (rating === 2) playSound2Stars();
+  else if (rating === 1) playSound1Star();
+  else                   playSound0Stars();
 
-  for (let i=1; i<=3; i++) {
+  const rb = document.getElementById('resultBox');
+  rb.className = 'result-box rating-'+rating+' show';
+  for (let i=1;i<=3;i++) {
     const el = document.getElementById('rs'+i);
     el.classList.remove('lit','bounce');
-    if (i <= rating) {
-      setTimeout(() => {
-        el.classList.add('lit','bounce');
-      }, i * 200);
-    }
+    if (i<=rating) setTimeout(()=>{ el.classList.add('lit','bounce'); }, i*200);
   }
 
-  // Messages
   const msgs = {
-    3: { title: '🌟 เยี่ยมมาก!', sub: 'ออกเสียงได้สมบูรณ์แบบ! ได้ 3 ดาว!' },
-    2: { title: '👍 ดีมาก!', sub: 'ออกเสียงได้ดี! ได้ 2 ดาว!' },
-    1: { title: '😊 พยายามดี!', sub: 'ได้ 1 ดาว ลองฝึกอีกนะ!' },
-    0: { title: '😅 ไม่เป็นไร!', sub: 'ยังไม่ได้ดาวครั้งนี้ ฝึกต่อนะ!' },
+    3:{title:'🌟 เยี่ยมมาก!',sub:'ออกเสียงได้สมบูรณ์แบบ! ได้ 3 ดาว!'},
+    2:{title:'👍 ดีมาก!',sub:'ออกเสียงได้ดี! ได้ 2 ดาว!'},
+    1:{title:'😊 พยายามดี!',sub:'ได้ 1 ดาว ลองฝึกอีกนะ!'},
+    0:{title:'😅 ไม่เป็นไร!',sub:'ยังไม่ได้ดาวครั้งนี้ ฝึกต่อนะ!'},
   };
   const m = msgs[rating];
   document.getElementById('resultTitle').textContent = m.title;
@@ -877,111 +832,89 @@ function handleRating(rating, spoken='') {
   if (rating >= 2) spawnStars(rating);
   document.getElementById('btnNext').style.display = 'inline-block';
   document.getElementById('btnRecord').disabled = true;
-  document.getElementById('fallbackSection').classList.remove('visible');
   document.getElementById('btnRecord').style.display = 'inline-flex';
-
+  document.getElementById('fallbackSection').classList.remove('visible');
   addHistory(w, rating);
 }
 
-function nextWord() {
-  currentIndex++;
-  showWord();
-}
+function nextWord() { currentIndex++; showWord(); }
 
-// ---- Score bar ----
 function updateScoreBar() {
   const max = WORDS_PER_ROUND * 3;
   document.getElementById('starCount').textContent = totalStars;
   document.getElementById('starMax').textContent = max;
-  const pct = Math.min((totalStars / max) * 100, 100);
-  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressFill').style.width = Math.min((totalStars/max)*100,100)+'%';
 }
 
-// ---- Particles ----
 function spawnStars(count) {
-  const icons = count === 3
-    ? ['🌟','⭐','✨','💫']
-    : ['⭐','✨'];
-  const n = count === 3 ? 7 : 4;
-  for (let i=0; i<n; i++) {
-    setTimeout(() => {
-      const el = document.createElement('div');
-      el.className = 'star-burst';
-      el.textContent = icons[Math.floor(Math.random()*icons.length)];
-      el.style.fontSize = (1.5 + Math.random()) + 'rem';
-      el.style.left = (15 + Math.random() * 70) + '%';
-      el.style.top = (15 + Math.random() * 55) + '%';
-      document.body.appendChild(el);
-      setTimeout(() => el.remove(), 1400);
-    }, i * 100);
-  }
+  const icons = count===3 ? ['🌟','⭐','✨','💫'] : ['⭐','✨'];
+  const n = count===3 ? 7 : 4;
+  for(let i=0;i<n;i++) setTimeout(()=>{
+    const el = document.createElement('div');
+    el.className = 'star-burst';
+    el.textContent = icons[Math.floor(Math.random()*icons.length)];
+    el.style.fontSize = (1.5+Math.random())+'rem';
+    el.style.left = (15+Math.random()*70)+'%';
+    el.style.top = (15+Math.random()*55)+'%';
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),1400);
+  }, i*100);
 }
 
-// ---- History ----
 function addHistory(w, rating) {
-  const stars = '⭐'.repeat(rating) || '❌';
-  history.unshift({ emoji: w.emoji, word: w.word, stars, rating });
+  const stars = '⭐'.repeat(rating)||'❌';
+  history.unshift({emoji:w.emoji, word:w.word, stars, rating});
   const section = document.getElementById('historySection');
   const list = document.getElementById('historyList');
   section.style.display = 'block';
-  list.innerHTML = history.slice(0,12).map(h => {
-    const colors = ['#ccc','#ff9090','#90d490','#FFD700'];
-    return `<div class="history-item" style="border:2px solid ${colors[h.rating]}">${h.emoji} ${h.word} ${h.stars}</div>`;
-  }).join('');
+  const colors = ['#ccc','#ff9090','#90d490','#FFD700'];
+  list.innerHTML = history.slice(0,12).map(h=>
+    `<div class="history-item" style="border:2px solid ${colors[h.rating]}">${h.emoji} ${h.word} ${h.stars}</div>`
+  ).join('');
 }
 
-// ---- Trophy ----
 function showTrophy() {
   const max = WORDS_PER_ROUND * 3;
-  const pct = totalStars / max;
-  let emoji = '🏆', title = 'เก่งมากเลย!';
-  if (pct === 1) { emoji = '👑'; title = 'สมบูรณ์แบบ!'; }
-  else if (pct >= 0.7) { emoji = '🥇'; title = 'เก่งมากเลย!'; }
-  else if (pct >= 0.4) { emoji = '🥈'; title = 'ดีมาก!'; }
-  else { emoji = '🥉'; title = 'ยังไงก็ฝึกต่อนะ!'; }
-
+  const pct = totalStars/max;
+  let emoji='🏆', title='เก่งมากเลย!';
+  if(pct===1){emoji='👑';title='สมบูรณ์แบบ!';}
+  else if(pct>=.7){emoji='🥇';title='เก่งมากเลย!';}
+  else if(pct>=.4){emoji='🥈';title='ดีมาก!';}
+  else{emoji='🥉';title='ยังไงก็ฝึกต่อนะ!';}
   document.getElementById('trophyEmoji').textContent = emoji;
   document.getElementById('trophyTitle').textContent = title;
   document.getElementById('trophyMsg').textContent = `ได้ ${totalStars} จาก ${max} ดาว`;
-
-  // Stars breakdown
-  const cnt3 = history.filter(h=>h.rating===3).length;
-  const cnt2 = history.filter(h=>h.rating===2).length;
-  const cnt1 = history.filter(h=>h.rating===1).length;
-  const cnt0 = history.filter(h=>h.rating===0).length;
+  const cnt3=history.filter(h=>h.rating===3).length;
+  const cnt2=history.filter(h=>h.rating===2).length;
+  const cnt1=history.filter(h=>h.rating===1).length;
+  const cnt0=history.filter(h=>h.rating===0).length;
   document.getElementById('summaryStars').innerHTML = `
     <div class="summary-item"><div class="big">⭐⭐⭐</div><div class="lbl">${cnt3} ครั้ง</div></div>
     <div class="summary-item"><div class="big">⭐⭐</div><div class="lbl">${cnt2} ครั้ง</div></div>
     <div class="summary-item"><div class="big">⭐</div><div class="lbl">${cnt1} ครั้ง</div></div>
     <div class="summary-item"><div class="big">❌</div><div class="lbl">${cnt0} ครั้ง</div></div>
   `;
-
   document.getElementById('trophyPopup').classList.add('show');
-  spawnStars(3); setTimeout(() => spawnStars(3), 600);
+  playSoundTrophy();
+  spawnStars(3); setTimeout(()=>spawnStars(3),600);
 }
 
-function resetGame() {
+function resetRound() {
   document.getElementById('trophyPopup').classList.remove('show');
-  totalStars = 0;
-  history = [];
-  document.getElementById('historySection').style.display = 'none';
-  document.getElementById('historyList').innerHTML = '';
-  wordQueue = shuffle(levels[currentLevel].words).slice(0, WORDS_PER_ROUND);
-  currentIndex = 0;
-  updateScoreBar();
-  showWord();
+  if (currentCatKey) startRound();
 }
 
 // Init
 hasMic = setupRecognition();
 if (!hasMic) document.getElementById('speakHint').textContent = '⚠️ ไม่พบไมโครโฟน — ใช้ปุ่มด้านล่างแทน';
-setLevel(0);
+renderCatGrid();
 </script>
+
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("./sw.js")
-      .then(() => console.log("✅ Service Worker ลงทะเบียนแล้ว"))
+      .then(() => console.log("✅ SW registered"))
       .catch(err => console.log("SW error:", err));
   });
 }
