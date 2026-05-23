@@ -66,14 +66,14 @@
   .cat-section{background:white;border-radius:22px;padding:16px;margin-bottom:14px;
     box-shadow:0 6px 20px rgba(0,0,0,.1);animation:slideUp .35s ease;}
   .cat-section h3{font-family:'Fredoka One',cursive;font-size:1.05rem;color:var(--dark);margin-bottom:12px;text-align:center;}
-  .cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
-  .cat-btn{background:#f8f4ff;border:2px solid #ddd;border-radius:14px;padding:10px 4px 8px;
+  .cat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
+  .cat-btn{background:#f8f4ff;border:2px solid #ddd;border-radius:12px;padding:8px 3px 7px;
     cursor:pointer;transition:all .2s;text-align:center;font-family:'Nunito',sans-serif;}
   .cat-btn:hover{border-color:var(--purple);transform:scale(1.05);}
   .cat-btn.active{border-color:var(--purple);background:linear-gradient(135deg,#f0e8ff,#e0d0ff);
     transform:scale(1.06);box-shadow:0 3px 10px rgba(132,94,194,.25);}
-  .cat-btn .cat-emoji{font-size:1.6rem;display:block;margin-bottom:3px;}
-  .cat-btn .cat-name{font-size:.7rem;font-weight:800;color:#666;line-height:1.2;}
+  .cat-btn .cat-emoji{font-size:1.4rem;display:block;margin-bottom:2px;}
+  .cat-btn .cat-name{font-size:.63rem;font-weight:800;color:#666;line-height:1.2;}
   .cat-btn.active .cat-name{color:var(--purple);}
 
   /* Word card */
@@ -484,6 +484,314 @@ const CATEGORIES = {
       {word:'APPOINTMENT',emoji:'📋',thai:'นัดหมาย',phonetic:'อะพอยน์เม้นท์'},
     ],
   },
+
+  food: {
+    name:'อาหาร&เครื่องดื่ม', emoji:'🍎',
+    easy:[
+      {word:'RICE',emoji:'🍚',thai:'ข้าว',phonetic:'ไรซ์'},
+      {word:'MILK',emoji:'🥛',thai:'นม',phonetic:'มิลค์'},
+      {word:'EGG',emoji:'🥚',thai:'ไข่',phonetic:'เอ็ก'},
+      {word:'BREAD',emoji:'🍞',thai:'ขนมปัง',phonetic:'เบรด'},
+      {word:'WATER',emoji:'💧',thai:'น้ำ',phonetic:'วอเทอร์'},
+      {word:'APPLE',emoji:'🍎',thai:'แอปเปิ้ล',phonetic:'แอ็บเปิ้ล'},
+    ],
+    medium:[
+      {word:'ORANGE',emoji:'🍊',thai:'ส้ม',phonetic:'ออเรนจ์'},
+      {word:'MANGO',emoji:'🥭',thai:'มะม่วง',phonetic:'แมงโก้'},
+      {word:'NOODLE',emoji:'🍜',thai:'บะหมี่',phonetic:'นูเดิล'},
+      {word:'JUICE',emoji:'🧃',thai:'น้ำผลไม้',phonetic:'จูส'},
+      {word:'COOKIE',emoji:'🍪',thai:'คุกกี้',phonetic:'คุ๊กกี้'},
+      {word:'PIZZA',emoji:'🍕',thai:'พิซซ่า',phonetic:'พิซซ่า'},
+    ],
+    hard:[
+      {word:'STRAWBERRY',emoji:'🍓',thai:'สตรอว์เบอร์รี',phonetic:'สตรอเบอร์รี'},
+      {word:'CHOCOLATE',emoji:'🍫',thai:'ช็อกโกแลต',phonetic:'ช็อกโกเลต'},
+      {word:'WATERMELON',emoji:'🍉',thai:'แตงโม',phonetic:'วอเทอร์เมลอน'},
+      {word:'PINEAPPLE',emoji:'🍍',thai:'สับปะรด',phonetic:'ไพแนปเปิล'},
+      {word:'SMOOTHIE',emoji:'🥤',thai:'สมูทตี้',phonetic:'สมูทตี้'},
+      {word:'VEGETABLE',emoji:'🥦',thai:'ผัก',phonetic:'เวจิทะเบิล'},
+    ],
+  },
+  places: {
+    name:'สถานที่', emoji:'🏠',
+    easy:[
+      {word:'HOME',emoji:'🏠',thai:'บ้าน',phonetic:'โฮม'},
+      {word:'SCHOOL',emoji:'🏫',thai:'โรงเรียน',phonetic:'สคูล'},
+      {word:'PARK',emoji:'🌳',thai:'สวนสาธารณะ',phonetic:'พาร์ค'},
+      {word:'SHOP',emoji:'🏪',thai:'ร้านค้า',phonetic:'ช็อป'},
+      {word:'FARM',emoji:'🌾',thai:'ฟาร์ม',phonetic:'ฟาร์ม'},
+      {word:'BEACH',emoji:'🏖️',thai:'ชายหาด',phonetic:'บีช'},
+    ],
+    medium:[
+      {word:'HOSPITAL',emoji:'🏥',thai:'โรงพยาบาล',phonetic:'ฮอสพิทัล'},
+      {word:'AIRPORT',emoji:'✈️',thai:'สนามบิน',phonetic:'แอร์พอร์ต'},
+      {word:'LIBRARY',emoji:'📚',thai:'ห้องสมุด',phonetic:'ไลบรารี'},
+      {word:'MARKET',emoji:'🛒',thai:'ตลาด',phonetic:'มาร์เก็ต'},
+      {word:'TEMPLE',emoji:'⛩️',thai:'วัด',phonetic:'เทมเพิล'},
+      {word:'MUSEUM',emoji:'🏛️',thai:'พิพิธภัณฑ์',phonetic:'มิวเซียม'},
+    ],
+    hard:[
+      {word:'RESTAURANT',emoji:'🍽️',thai:'ร้านอาหาร',phonetic:'เรสเตอรองต์'},
+      {word:'SUPERMARKET',emoji:'🏬',thai:'ซูเปอร์มาร์เก็ต',phonetic:'ซูเปอร์มาร์เก็ต'},
+      {word:'UNIVERSITY',emoji:'🎓',thai:'มหาวิทยาลัย',phonetic:'ยูนิเวอร์ซิตี้'},
+      {word:'STADIUM',emoji:'🏟️',thai:'สนามกีฬา',phonetic:'สเตเดียม'},
+      {word:'PLANETARIUM',emoji:'🔭',thai:'ท้องฟ้าจำลอง',phonetic:'แพลนนิทาเรียม'},
+      {word:'AQUARIUM',emoji:'🐠',thai:'พิพิธภัณฑ์สัตว์น้ำ',phonetic:'อะแควเรียม'},
+    ],
+  },
+  family: {
+    name:'ครอบครัว&คน', emoji:'👨‍👩‍👧',
+    easy:[
+      {word:'MOM',emoji:'👩',thai:'แม่',phonetic:'มอม'},
+      {word:'DAD',emoji:'👨',thai:'พ่อ',phonetic:'แด็ด'},
+      {word:'BABY',emoji:'👶',thai:'ทารก',phonetic:'เบบี้'},
+      {word:'BOY',emoji:'👦',thai:'เด็กผู้ชาย',phonetic:'บอย'},
+      {word:'GIRL',emoji:'👧',thai:'เด็กผู้หญิง',phonetic:'เกิร์ล'},
+      {word:'FRIEND',emoji:'🤝',thai:'เพื่อน',phonetic:'เฟรนด์'},
+    ],
+    medium:[
+      {word:'SISTER',emoji:'👧',thai:'พี่สาว/น้องสาว',phonetic:'ซิสเตอร์'},
+      {word:'BROTHER',emoji:'👦',thai:'พี่ชาย/น้องชาย',phonetic:'บราเธอร์'},
+      {word:'TEACHER',emoji:'👩‍🏫',thai:'ครู',phonetic:'ทีเชอร์'},
+      {word:'DOCTOR',emoji:'👨‍⚕️',thai:'หมอ',phonetic:'ด็อกเตอร์'},
+      {word:'POLICE',emoji:'👮',thai:'ตำรวจ',phonetic:'โพลีส'},
+      {word:'GRANDMA',emoji:'👵',thai:'คุณยาย',phonetic:'แกรนม่า'},
+    ],
+    hard:[
+      {word:'GRANDFATHER',emoji:'👴',thai:'คุณปู่/ตา',phonetic:'แกรนฟาเธอร์'},
+      {word:'GRANDMOTHER',emoji:'👵',thai:'คุณย่า/ยาย',phonetic:'แกรนมาเธอร์'},
+      {word:'FIREFIGHTER',emoji:'👨‍🚒',thai:'นักดับเพลิง',phonetic:'ไฟร์ไฟเตอร์'},
+      {word:'NEIGHBOUR',emoji:'🏘️',thai:'เพื่อนบ้าน',phonetic:'เนเบอร์'},
+      {word:'VOLUNTEER',emoji:'🙋',thai:'อาสาสมัคร',phonetic:'วอลันเทียร์'},
+      {word:'CLASSMATE',emoji:'🧑‍🤝‍🧑',thai:'เพื่อนร่วมชั้น',phonetic:'คลาสเมท'},
+    ],
+  },
+  weather: {
+    name:'สภาพอากาศ', emoji:'🌤️',
+    easy:[
+      {word:'SUN',emoji:'☀️',thai:'แดด',phonetic:'ซัน'},
+      {word:'RAIN',emoji:'🌧️',thai:'ฝน',phonetic:'เรน'},
+      {word:'WIND',emoji:'💨',thai:'ลม',phonetic:'วินด์'},
+      {word:'CLOUD',emoji:'☁️',thai:'เมฆ',phonetic:'คลาวด์'},
+      {word:'HOT',emoji:'🥵',thai:'ร้อน',phonetic:'ฮอท'},
+      {word:'COLD',emoji:'🥶',thai:'หนาว',phonetic:'โคลด์'},
+    ],
+    medium:[
+      {word:'SNOW',emoji:'❄️',thai:'หิมะ',phonetic:'สโนว์'},
+      {word:'STORM',emoji:'⛈️',thai:'พายุ',phonetic:'สตอร์ม'},
+      {word:'FOGGY',emoji:'🌫️',thai:'หมอก',phonetic:'ฟ็อกกี้'},
+      {word:'RAINBOW',emoji:'🌈',thai:'รุ้ง',phonetic:'เรนโบว์'},
+      {word:'THUNDER',emoji:'⚡',thai:'ฟ้าร้อง',phonetic:'ธันเดอร์'},
+      {word:'SUNNY',emoji:'🌞',thai:'แดดออก',phonetic:'ซันนี่'},
+    ],
+    hard:[
+      {word:'HURRICANE',emoji:'🌀',thai:'พายุเฮอร์ริเคน',phonetic:'เฮอร์ริเคน'},
+      {word:'LIGHTNING',emoji:'🌩️',thai:'ฟ้าผ่า',phonetic:'ไลท์นิ่ง'},
+      {word:'BLIZZARD',emoji:'🌨️',thai:'พายุหิมะ',phonetic:'บลิซซาร์ด'},
+      {word:'HUMIDITY',emoji:'💦',thai:'ความชื้น',phonetic:'ฮิวมิดิตี้'},
+      {word:'TEMPERATURE',emoji:'🌡️',thai:'อุณหภูมิ',phonetic:'เทมเพอราเจอร์'},
+      {word:'ATMOSPHERE',emoji:'🌍',thai:'บรรยากาศ',phonetic:'แอทโมสเฟียร์'},
+    ],
+  },
+
+  countries: {
+    name:'ประเทศ&ภาษา', emoji:'🌍',
+    easy:[
+      {word:'THAILAND',emoji:'🇹🇭',thai:'ประเทศไทย',phonetic:'ไทยแลนด์'},
+      {word:'JAPAN',emoji:'🇯🇵',thai:'ประเทศญี่ปุ่น',phonetic:'จาแปน'},
+      {word:'CHINA',emoji:'🇨🇳',thai:'ประเทศจีน',phonetic:'ไชน่า'},
+      {word:'ENGLISH',emoji:'🇬🇧',thai:'ภาษาอังกฤษ',phonetic:'อิงลิช'},
+      {word:'THAI',emoji:'🇹🇭',thai:'ภาษาไทย',phonetic:'ไทย'},
+      {word:'WORLD',emoji:'🌍',thai:'โลก',phonetic:'เวิลด์'},
+    ],
+    medium:[
+      {word:'AMERICA',emoji:'🇺🇸',thai:'อเมริกา',phonetic:'อเมริกา'},
+      {word:'FRANCE',emoji:'🇫🇷',thai:'ประเทศฝรั่งเศส',phonetic:'ฟรานซ์'},
+      {word:'KOREA',emoji:'🇰🇷',thai:'ประเทศเกาหลี',phonetic:'เกาหลี'},
+      {word:'GERMAN',emoji:'🇩🇪',thai:'ภาษาเยอรมัน',phonetic:'เจอร์แมน'},
+      {word:'SPANISH',emoji:'🇪🇸',thai:'ภาษาสเปน',phonetic:'สแปนิช'},
+      {word:'ARABIC',emoji:'🇸🇦',thai:'ภาษาอาหรับ',phonetic:'อาราบิค'},
+    ],
+    hard:[
+      {word:'AUSTRALIA',emoji:'🇦🇺',thai:'ออสเตรเลีย',phonetic:'ออสเตรเลีย'},
+      {word:'BRAZIL',emoji:'🇧🇷',thai:'บราซิล',phonetic:'บราซิล'},
+      {word:'PORTUGUESE',emoji:'🇵🇹',thai:'ภาษาโปรตุเกส',phonetic:'พอร์ทุกีส'},
+      {word:'MANDARIN',emoji:'🇨🇳',thai:'ภาษาจีนกลาง',phonetic:'แมนดาริน'},
+      {word:'INTERNATIONAL',emoji:'🌐',thai:'นานาชาติ',phonetic:'อินเตอร์เนชั่นนัล'},
+      {word:'CONTINENT',emoji:'🗺️',thai:'ทวีป',phonetic:'คอนทิเนนท์'},
+    ],
+  },
+  jobs: {
+    name:'อาชีพ', emoji:'👷',
+    easy:[
+      {word:'CHEF',emoji:'👨‍🍳',thai:'พ่อครัว',phonetic:'เชฟ'},
+      {word:'NURSE',emoji:'👩‍⚕️',thai:'พยาบาล',phonetic:'เนิร์ส'},
+      {word:'FARMER',emoji:'👨‍🌾',thai:'ชาวนา',phonetic:'ฟาร์มเมอร์'},
+      {word:'PILOT',emoji:'👨‍✈️',thai:'นักบิน',phonetic:'ไพล็อต'},
+      {word:'SINGER',emoji:'🎤',thai:'นักร้อง',phonetic:'ซิงเกอร์'},
+      {word:'ARTIST',emoji:'🎨',thai:'ศิลปิน',phonetic:'อาร์ทิสท์'},
+    ],
+    medium:[
+      {word:'DENTIST',emoji:'🦷',thai:'ทันตแพทย์',phonetic:'เดนทิสท์'},
+      {word:'SOLDIER',emoji:'🪖',thai:'ทหาร',phonetic:'โซลเจอร์'},
+      {word:'LAWYER',emoji:'⚖️',thai:'ทนายความ',phonetic:'ลอเยอร์'},
+      {word:'SCIENTIST',emoji:'🔬',thai:'นักวิทยาศาสตร์',phonetic:'ไซเอนทิสท์'},
+      {word:'ENGINEER',emoji:'⚙️',thai:'วิศวกร',phonetic:'เอนจิเนียร์'},
+      {word:'ASTRONAUT',emoji:'👨‍🚀',thai:'นักบินอวกาศ',phonetic:'แอสโทรนอท'},
+    ],
+    hard:[
+      {word:'ARCHAEOLOGIST',emoji:'🏺',thai:'นักโบราณคดี',phonetic:'อาร์คีออโลจิสท์'},
+      {word:'VETERINARIAN',emoji:'🐾',thai:'สัตวแพทย์',phonetic:'เวทเทอรินาเรียน'},
+      {word:'ENTREPRENEUR',emoji:'💼',thai:'ผู้ประกอบการ',phonetic:'อองทรีพรีเนอร์'},
+      {word:'PHOTOGRAPHER',emoji:'📷',thai:'ช่างภาพ',phonetic:'โฟโตกราฟเฟอร์'},
+      {word:'NUTRITIONIST',emoji:'🥗',thai:'นักโภชนาการ',phonetic:'นิวทริชันนิสท์'},
+      {word:'PSYCHIATRIST',emoji:'🧠',thai:'จิตแพทย์',phonetic:'ไซคายาทริสท์'},
+    ],
+  },
+  verbs: {
+    name:'กริยา', emoji:'🏃',
+    easy:[
+      {word:'RUN',emoji:'🏃',thai:'วิ่ง',phonetic:'รัน'},
+      {word:'EAT',emoji:'😋',thai:'กิน',phonetic:'อีท'},
+      {word:'SWIM',emoji:'🏊',thai:'ว่ายน้ำ',phonetic:'สวิม'},
+      {word:'JUMP',emoji:'🦘',thai:'กระโดด',phonetic:'จัมพ์'},
+      {word:'SING',emoji:'🎵',thai:'ร้องเพลง',phonetic:'ซิง'},
+      {word:'PLAY',emoji:'🎮',thai:'เล่น',phonetic:'เพลย์'},
+    ],
+    medium:[
+      {word:'SLEEP',emoji:'😴',thai:'นอนหลับ',phonetic:'สลีป'},
+      {word:'STUDY',emoji:'📖',thai:'เรียน',phonetic:'สตัดดี้'},
+      {word:'DANCE',emoji:'💃',thai:'เต้น',phonetic:'แดนซ์'},
+      {word:'CLIMB',emoji:'🧗',thai:'ปีน',phonetic:'คลายม์'},
+      {word:'DRIVE',emoji:'🚗',thai:'ขับรถ',phonetic:'ไดรฟ์'},
+      {word:'COOK',emoji:'🍳',thai:'ทำอาหาร',phonetic:'คุ๊ค'},
+    ],
+    hard:[
+      {word:'EXPLORE',emoji:'🗺️',thai:'สำรวจ',phonetic:'เอ็กซ์พลอร์'},
+      {word:'CALCULATE',emoji:'🧮',thai:'คำนวณ',phonetic:'แคลคิวเลต'},
+      {word:'COMMUNICATE',emoji:'💬',thai:'สื่อสาร',phonetic:'คอมมิวนิเคท'},
+      {word:'COLLABORATE',emoji:'🤝',thai:'ร่วมมือ',phonetic:'คอลแลบโอเรท'},
+      {word:'INVESTIGATE',emoji:'🔍',thai:'สืบสวน',phonetic:'อินเวสทิเกท'},
+      {word:'NEGOTIATE',emoji:'🤝',thai:'เจรจา',phonetic:'นิโกชิเอท'},
+    ],
+  },
+  shapes: {
+    name:'รูปทรง', emoji:'🔷',
+    easy:[
+      {word:'CIRCLE',emoji:'⭕',thai:'วงกลม',phonetic:'เซอร์เคิล'},
+      {word:'STAR',emoji:'⭐',thai:'ดาว',phonetic:'สตาร์'},
+      {word:'HEART',emoji:'❤️',thai:'หัวใจ',phonetic:'ฮาร์ท'},
+      {word:'SQUARE',emoji:'🟥',thai:'สี่เหลี่ยมจัตุรัส',phonetic:'สแควร์'},
+      {word:'LINE',emoji:'〰️',thai:'เส้น',phonetic:'ไลน์'},
+      {word:'DOT',emoji:'🔴',thai:'จุด',phonetic:'ด็อท'},
+    ],
+    medium:[
+      {word:'TRIANGLE',emoji:'🔺',thai:'สามเหลี่ยม',phonetic:'ไทรแองเกิล'},
+      {word:'DIAMOND',emoji:'💎',thai:'เพชร/ข้าวหลามตัด',phonetic:'ไดมอนด์'},
+      {word:'OVAL',emoji:'🥚',thai:'รูปไข่',phonetic:'โอวัล'},
+      {word:'ARROW',emoji:'➡️',thai:'ลูกศร',phonetic:'แอร์โรว์'},
+      {word:'SPIRAL',emoji:'🌀',thai:'เกลียว',phonetic:'สไปรัล'},
+      {word:'RECTANGLE',emoji:'🟦',thai:'สี่เหลี่ยมผืนผ้า',phonetic:'เรคแทงเกิล'},
+    ],
+    hard:[
+      {word:'PENTAGON',emoji:'⬠',thai:'ห้าเหลี่ยม',phonetic:'เพ็นทากอน'},
+      {word:'HEXAGON',emoji:'⬡',thai:'หกเหลี่ยม',phonetic:'เฮ็กซากอน'},
+      {word:'CYLINDER',emoji:'🥫',thai:'ทรงกระบอก',phonetic:'ซิลินเดอร์'},
+      {word:'PYRAMID',emoji:'🔺',thai:'พีระมิด',phonetic:'พิรามิด'},
+      {word:'SPHERE',emoji:'🌐',thai:'ทรงกลม',phonetic:'สเฟียร์'},
+      {word:'OCTAGON',emoji:'🛑',thai:'แปดเหลี่ยม',phonetic:'อ็อคทากอน'},
+    ],
+  },
+  time: {
+    name:'เวลา', emoji:'⏰',
+    easy:[
+      {word:'DAY',emoji:'☀️',thai:'กลางวัน',phonetic:'เดย์'},
+      {word:'NIGHT',emoji:'🌙',thai:'กลางคืน',phonetic:'ไนท์'},
+      {word:'MORNING',emoji:'🌅',thai:'ตอนเช้า',phonetic:'มอร์นิ่ง'},
+      {word:'NOON',emoji:'🌞',thai:'เที่ยง',phonetic:'นูน'},
+      {word:'HOUR',emoji:'🕐',thai:'ชั่วโมง',phonetic:'เอาเวอร์'},
+      {word:'NOW',emoji:'👉',thai:'ตอนนี้',phonetic:'นาว'},
+    ],
+    medium:[
+      {word:'EVENING',emoji:'🌆',thai:'ตอนเย็น',phonetic:'อีฟนิ่ง'},
+      {word:'MINUTE',emoji:'⏱️',thai:'นาที',phonetic:'มินิท'},
+      {word:'SECOND',emoji:'⚡',thai:'วินาที',phonetic:'เซคันด์'},
+      {word:'EARLY',emoji:'🌄',thai:'เช้าตรู่/เร็ว',phonetic:'เอิร์ลี่'},
+      {word:'LATE',emoji:'😅',thai:'สาย/ช้า',phonetic:'เลท'},
+      {word:'MIDNIGHT',emoji:'🌚',thai:'เที่ยงคืน',phonetic:'มิดไนท์'},
+    ],
+    hard:[
+      {word:'AFTERNOON',emoji:'🌤️',thai:'ช่วงบ่าย',phonetic:'อาฟเตอร์นูน'},
+      {word:'DAWN',emoji:'🌇',thai:'รุ่งสาง',phonetic:'ดอน'},
+      {word:'DUSK',emoji:'🌃',thai:'พลบค่ำ',phonetic:'ดัสค์'},
+      {word:'CENTURY',emoji:'🏛️',thai:'ศตวรรษ',phonetic:'เซนจูรี่'},
+      {word:'PUNCTUAL',emoji:'✅',thai:'ตรงต่อเวลา',phonetic:'พังจ์ชวล'},
+      {word:'SIMULTANEOUSLY',emoji:'⚡',thai:'พร้อมกัน',phonetic:'ซิมัลเทเนียสลี'},
+    ],
+  },
+
+  alphabet: {
+    name:'ตัวอักษร A-Z', emoji:'🔤',
+    easy:[
+      {word:'A',emoji:'🍎',thai:'เอ — Apple',phonetic:'เอ'},
+      {word:'B',emoji:'🐝',thai:'บี — Bee',phonetic:'บี'},
+      {word:'C',emoji:'🐱',thai:'ซี — Cat',phonetic:'ซี'},
+      {word:'D',emoji:'🐶',thai:'ดี — Dog',phonetic:'ดี'},
+      {word:'E',emoji:'🐘',thai:'อี — Elephant',phonetic:'อี'},
+      {word:'F',emoji:'🐟',thai:'เอฟ — Fish',phonetic:'เอฟ'},
+    ],
+    medium:[
+      {word:'G',emoji:'🦒',thai:'จี — Giraffe',phonetic:'จี'},
+      {word:'H',emoji:'🐴',thai:'เอช — Horse',phonetic:'เอช'},
+      {word:'I',emoji:'🍦',thai:'ไอ — Ice cream',phonetic:'ไอ'},
+      {word:'J',emoji:'🦘',thai:'เจ — Jumping',phonetic:'เจ'},
+      {word:'K',emoji:'🦘',thai:'เค — Kangaroo',phonetic:'เค'},
+      {word:'L',emoji:'🦁',thai:'แอล — Lion',phonetic:'แอล'},
+      {word:'M',emoji:'🐒',thai:'เอ็ม — Monkey',phonetic:'เอ็ม'},
+      {word:'N',emoji:'📰',thai:'เอ็น — News',phonetic:'เอ็น'},
+      {word:'O',emoji:'🐙',thai:'โอ — Octopus',phonetic:'โอ'},
+      {word:'P',emoji:'🐧',thai:'พี — Penguin',phonetic:'พี'},
+      {word:'Q',emoji:'👸',thai:'คิว — Queen',phonetic:'คิว'},
+      {word:'R',emoji:'🌈',thai:'อาร์ — Rainbow',phonetic:'อาร์'},
+    ],
+    hard:[
+      {word:'S',emoji:'⭐',thai:'เอส — Star',phonetic:'เอส'},
+      {word:'T',emoji:'🐯',thai:'ที — Tiger',phonetic:'ที'},
+      {word:'U',emoji:'☂️',thai:'ยู — Umbrella',phonetic:'ยู'},
+      {word:'V',emoji:'🎻',thai:'วี — Violin',phonetic:'วี'},
+      {word:'W',emoji:'🐋',thai:'ดับเบิ้ลยู — Whale',phonetic:'ดับเบิ้ลยู'},
+      {word:'X',emoji:'🎄',thai:'เอ็กซ์ — Xmas',phonetic:'เอ็กซ์'},
+      {word:'Y',emoji:'🪀',thai:'วาย — Yoyo',phonetic:'วาย'},
+      {word:'Z',emoji:'🦓',thai:'แซด — Zebra',phonetic:'แซด'},
+    ],
+  },
+  digits: {
+    name:'ตัวเลข 0-9', emoji:'🔢',
+    easy:[
+      {word:'ZERO',emoji:'0️⃣',thai:'ศูนย์',phonetic:'เซียโร่'},
+      {word:'ONE',emoji:'1️⃣',thai:'หนึ่ง',phonetic:'วัน'},
+      {word:'TWO',emoji:'2️⃣',thai:'สอง',phonetic:'ทู'},
+      {word:'THREE',emoji:'3️⃣',thai:'สาม',phonetic:'ธรี'},
+      {word:'FOUR',emoji:'4️⃣',thai:'สี่',phonetic:'ฟอร์'},
+      {word:'FIVE',emoji:'5️⃣',thai:'ห้า',phonetic:'ไฟว์'},
+    ],
+    medium:[
+      {word:'SIX',emoji:'6️⃣',thai:'หก',phonetic:'ซิกซ์'},
+      {word:'SEVEN',emoji:'7️⃣',thai:'เจ็ด',phonetic:'เซเวน'},
+      {word:'EIGHT',emoji:'8️⃣',thai:'แปด',phonetic:'เอท'},
+      {word:'NINE',emoji:'9️⃣',thai:'เก้า',phonetic:'ไนน์'},
+      {word:'TEN',emoji:'🔟',thai:'สิบ',phonetic:'เทน'},
+      {word:'ELEVEN',emoji:'1️⃣1️⃣',thai:'สิบเอ็ด',phonetic:'อีเลเวน'},
+    ],
+    hard:[
+      {word:'TWELVE',emoji:'1️⃣2️⃣',thai:'สิบสอง',phonetic:'ทเวลฟ์'},
+      {word:'THIRTEEN',emoji:'1️⃣3️⃣',thai:'สิบสาม',phonetic:'เธอร์ทีน'},
+      {word:'FOURTEEN',emoji:'1️⃣4️⃣',thai:'สิบสี่',phonetic:'ฟอร์ทีน'},
+      {word:'FIFTEEN',emoji:'1️⃣5️⃣',thai:'สิบห้า',phonetic:'ฟิฟทีน'},
+      {word:'TWENTY',emoji:'2️⃣0️⃣',thai:'ยี่สิบ',phonetic:'ทเวนตี้'},
+      {word:'HUNDRED',emoji:'💯',thai:'ร้อย',phonetic:'ฮันเดรด'},
+    ],
+  },
   months: {
     name:'เดือน', emoji:'🗓️',
     easy:[
@@ -611,9 +919,43 @@ function updateAttemptDots() {
 // ---- Audio ----
 function speakWord() {
   const w = wordQueue[currentIndex];
+  const synth = window.speechSynthesis;
+  if (!synth) { setHint('⚠️ เบราว์เซอร์ไม่รองรับ TTS', '#FF6B6B'); return; }
+
+  // Resume AudioContext ถ้า suspended (Android ต้องการ user gesture)
+  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+
+  // Cancel ที่ค้างอยู่
+  synth.cancel();
+
   const u = new SpeechSynthesisUtterance(w.word);
-  u.lang = 'en-US'; u.rate = 0.75; u.pitch = 1.1;
-  window.speechSynthesis.speak(u);
+  u.lang = 'en-US';
+  u.rate = 0.72;
+  u.pitch = 1.0;
+  u.volume = 1.0;
+
+  // หา voice ภาษาอังกฤษ ถ้ามี
+  const voices = synth.getVoices();
+  const enVoice = voices.find(v => v.lang.startsWith('en')) || null;
+  if (enVoice) u.voice = enVoice;
+
+  u.onerror = (e) => {
+    // TTS error — ลอง fallback ด้วย beep + hint
+    setHint('🔇 เสียงพูดไม่ออก — ดูคำอ่านข้างล่างนะ 👆', '#FF9671');
+    playTone(660, 'sine', 0, 0.1, 0.2);
+  };
+
+  synth.speak(u);
+
+  // Android bug: บางครั้ง speak() ไม่ทำงานถ้า voices ยังโหลดไม่เสร็จ
+  if (voices.length === 0) {
+    synth.onvoiceschanged = () => {
+      synth.cancel();
+      const v2 = synth.getVoices().find(v => v.lang.startsWith('en')) || null;
+      if (v2) u.voice = v2;
+      synth.speak(u);
+    };
+  }
 }
 
 // ---- Recording ----
@@ -695,10 +1037,21 @@ async function startRecording() {
   setHint('🎵 กำลังฟังอยู่... พูดชัดๆ ดังๆ นะ', '#845EC2');
 
   recognition.onresult = (e) => {
-    // รับผลลัพธ์ที่ดีที่สุดจากหลาย alternatives
-    const best = Array.from(e.results[0])
-      .map(alt => alt.transcript.trim())
-      .find(t => t.length > 0) || '';
+    // รวมทุก alternatives เพื่อเลือกที่ match ที่สุด
+    const target = wordQueue[currentIndex]?.word.toUpperCase() || '';
+    const alts = Array.from(e.results[0]).map(a => a.transcript.trim()).filter(t => t.length > 0);
+    
+    // เลือก alt ที่ใกล้เคียง target มากที่สุด
+    let best = alts[0] || '';
+    let bestScore = -1;
+    for (const alt of alts) {
+      const s = alt.toUpperCase().replace(/[^A-Z0-9 ]/g,'');
+      const sim = charSimilarity(s, target);
+      const dist = levenshtein(s, target);
+      const score = sim - (dist / Math.max(s.length||1, target.length||1)) * 0.3;
+      if (score > bestScore) { bestScore = score; best = alt; }
+    }
+    
     stopRecordingUI();
     processSpoken(best);
   };
@@ -752,13 +1105,39 @@ function charSimilarity(a, b) {
 }
 
 function computeRating(spoken, target, attempt) {
-  const s = spoken.toUpperCase().trim();
-  const t = target.toUpperCase().trim();
-  const exact = s === t || s.includes(t);
+  const s = spoken.toUpperCase().trim().replace(/[^A-Z0-9 ]/g,'');
+  const t = target.toUpperCase().trim().replace(/[^A-Z0-9 ]/g,'');
+  if (!s) return 0;
+
+  // 1) exact / contains
+  if (s === t || s.includes(t) || t.includes(s)) return Math.max(1, 3 - attempt);
+
+  // 2) word-level match (สำหรับ multi-word เช่น GOOD MORNING)
+  const tWords = t.split(' ');
+  const sWords = s.split(' ');
+  const wordMatch = tWords.every(tw => sWords.some(sw => sw === tw || levenshtein(sw,tw) <= 1));
+  if (wordMatch) return Math.max(1, 3 - attempt);
+
+  // 3) levenshtein distance
+  const dist = levenshtein(s, t);
+  const ratio = 1 - dist / Math.max(s.length, t.length);
+  if (ratio >= 0.80) return Math.max(1, 3 - attempt);
+  if (ratio >= 0.60) return Math.max(1, 2 - attempt);
+
+  // 4) char similarity fallback
   const sim = charSimilarity(s, t);
-  if (exact || sim >= 0.85) return 3 - attempt;
-  if (sim >= 0.55) return Math.max(1, 2 - attempt);
+  if (sim >= 0.75) return Math.max(1, 2 - attempt);
+  if (sim >= 0.50) return 1;
+
   return 0;
+}
+
+function levenshtein(a, b) {
+  const m = a.length, n = b.length;
+  const dp = Array.from({length: m+1}, (_,i) => Array.from({length: n+1}, (_,j) => i||j));
+  for (let i=1;i<=m;i++) for (let j=1;j<=n;j++)
+    dp[i][j] = a[i-1]===b[j-1] ? dp[i-1][j-1] : 1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);
+  return dp[m][n];
 }
 
 function processSpoken(spoken) {
