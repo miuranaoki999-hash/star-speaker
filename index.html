@@ -617,46 +617,129 @@ function speakWord() {
 }
 
 // ---- Recording ----
-function setupRecognition() {
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) return false;
-  recognition = new SR();
-  recognition.lang = 'en-US';
-  recognition.continuous = false;
-  recognition.interimResults = false;
-  recognition.onresult = (e) => {
-    const spoken = e.results[0][0].transcript.trim();
-    stopRecordingUI();
-    processSpoken(spoken);
-  };
-  recognition.onerror = () => { stopRecordingUI(); showFallback(); };
-  recognition.onend = () => { stopRecordingUI(); };
-  return true;
+const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+let micPermission = 'unknown'; // 'unknown' | 'granted' | 'denied'
+
+function setHint(txt, color='#aaa') {
+  const el = document.getElementById('speakHint');
+  el.textContent = txt;
+  el.style.color = color;
 }
 
-function startRecording() {
+function setRecordBtn(label, active) {
+  const btn = document.getElementById('btnRecord');
+  document.getElementById('recordLabel').textContent = label;
+  btn.classList.toggle('recording', active);
+}
+
+// ขอสิทธิ์ไมค์ล่วงหน้า แสดง status ชัดเจน
+async function requestMicPermission() {
+  if (!navigator.mediaDevices) return false;
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    stream.getTracks().forEach(t => t.stop()); // ขอแล้วปิดทิ้ง
+    micPermission = 'granted';
+    return true;
+  } catch(e) {
+    micPermission = 'denied';
+    return false;
+  }
+}
+
+// สร้าง recognition ใหม่ทุกครั้ง (แก้ปัญหา reuse)
+function buildRecognition() {
+  if (!SpeechRec) return null;
+  const r = new SpeechRec();
+  r.lang = 'en-US';
+  r.continuous = false;
+  r.interimResults = false;
+  r.maxAlternatives = 3;
+  return r;
+}
+
+async function startRecording() {
   if (wordDone) return;
-  if (isRecording) { if(recognition) recognition.stop(); stopRecordingUI(); return; }
-  if (!hasMic) hasMic = setupRecognition();
-  if (!hasMic || !recognition) { showFallback(); return; }
+  if (isRecording) {
+    if (recognition) { try { recognition.stop(); } catch(e){} }
+    stopRecordingUI();
+    return;
+  }
+
+  // ไม่รองรับ SpeechRecognition เลย
+  if (!SpeechRec) { showFallback('เบราว์เซอร์นี้ไม่รองรับไมค์ ใช้ Chrome นะ 🙏'); return; }
+
+  // ยังไม่เคยขอสิทธิ์ — ขอก่อน
+  if (micPermission === 'unknown') {
+    setRecordBtn('กำลังขอสิทธิ์ไมค์...', false);
+    setHint('📋 กรุณากด "Allow" เพื่ออนุญาตไมค์', '#FF9671');
+    const ok = await requestMicPermission();
+    if (!ok) {
+      setRecordBtn('กดแล้วพูดเลย!', false);
+      showFallback('ถูกปฏิเสธสิทธิ์ไมค์ — กดให้คะแนนตัวเองแทนนะ 😊');
+      return;
+    }
+  }
+
+  if (micPermission === 'denied') {
+    showFallback('ไมค์ถูกบล็อก — เปิดสิทธิ์ในเบราว์เซอร์แล้วลองใหม่ 🔓');
+    return;
+  }
+
+  // สร้าง recognition ใหม่ทุกรอบ
+  recognition = buildRecognition();
+  if (!recognition) { showFallback('ไม่รองรับ Speech Recognition 😢'); return; }
+
   isRecording = true;
   playSoundRecord();
-  document.getElementById('btnRecord').classList.add('recording');
-  document.getElementById('recordLabel').textContent = 'กำลังฟัง... พูดเลย!';
-  document.getElementById('speakHint').textContent = '🎵 กำลังฟังเสียงคุณอยู่...';
-  try { recognition.start(); } catch(e) { stopRecordingUI(); showFallback(); }
+  setRecordBtn('🔴 กำลังฟัง... พูดเลย!', true);
+  setHint('🎵 กำลังฟังอยู่... พูดชัดๆ ดังๆ นะ', '#845EC2');
+
+  recognition.onresult = (e) => {
+    // รับผลลัพธ์ที่ดีที่สุดจากหลาย alternatives
+    const best = Array.from(e.results[0])
+      .map(alt => alt.transcript.trim())
+      .find(t => t.length > 0) || '';
+    stopRecordingUI();
+    processSpoken(best);
+  };
+
+  recognition.onerror = (e) => {
+    stopRecordingUI();
+    const errMap = {
+      'not-allowed':    'ไมค์ถูกบล็อก — เปิดสิทธิ์ในเบราว์เซอร์แล้วลองใหม่ 🔓',
+      'no-speech':      '🔇 ไม่ได้ยินเสียง — ลองพูดดังขึ้นนะ',
+      'network':        '🌐 ต้องการอินเทอร์เน็ตสำหรับการแปลงเสียง',
+      'audio-capture':  '🎤 ไม่พบไมค์ในเครื่อง',
+      'aborted':        '',
+    };
+    const msg = errMap[e.error] || `เกิดข้อผิดพลาด: ${e.error}`;
+    if (e.error === 'not-allowed') { micPermission = 'denied'; showFallback(msg); }
+    else if (e.error === 'no-speech') { setHint(msg, '#FF6B6B'); }
+    else if (e.error !== 'aborted') { showFallback(msg); }
+  };
+
+  recognition.onend = () => { stopRecordingUI(); };
+
+  try {
+    recognition.start();
+  } catch(e) {
+    stopRecordingUI();
+    showFallback('ไม่สามารถเปิดไมค์ได้ — ลองใหม่อีกครั้ง');
+  }
 }
 
 function stopRecordingUI() {
   isRecording = false;
-  document.getElementById('btnRecord').classList.remove('recording');
-  document.getElementById('recordLabel').textContent = 'กดแล้วพูดเลย!';
+  setRecordBtn('กดแล้วพูดเลย!', false);
+  if (micPermission === 'granted') {
+    setHint('กดปุ่มแดง แล้วพูดคำนั้นออกมาดังๆ 😊', '#aaa');
+  }
 }
 
-function showFallback() {
+function showFallback(msg='ไม่พบไมโครโฟน — ให้คะแนนตัวเองนะ 😊') {
   document.getElementById('fallbackSection').classList.add('visible');
   document.getElementById('btnRecord').style.display = 'none';
-  document.getElementById('speakHint').textContent = 'ไม่พบไมโครโฟน — ให้คะแนนตัวเองนะ 😊';
+  setHint('⚠️ ' + msg, '#FF6B6B');
 }
 
 // ---- Rating ----
@@ -905,8 +988,9 @@ function resetRound() {
 }
 
 // Init
-hasMic = setupRecognition();
-if (!hasMic) document.getElementById('speakHint').textContent = '⚠️ ไม่พบไมโครโฟน — ใช้ปุ่มด้านล่างแทน';
+if (!SpeechRec) {
+  setTimeout(() => setHint('⚠️ เบราว์เซอร์นี้ไม่รองรับไมค์ — แนะนำให้ใช้ Chrome 🙏', '#FF6B6B'), 500);
+}
 renderCatGrid();
 </script>
 
