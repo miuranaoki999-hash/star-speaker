@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#845EC2">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Star Speaker">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌟 Star Speaker - ฝึกพูดภาษาอังกฤษ</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+
+  :root {
+    --sky: #6dd5fa;
+    --sky2: #2980b9;
+    --sun: #FFD93D;
+    --star: #FF6B6B;
+    --mint: #6BCB77;
+    --purple: #845EC2;
+    --peach: #FF9671;
+    --white: #fff;
+    --dark: #2d2d5e;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(160deg, #a8edea 0%, #fed6e3 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 12px 40px;
+  }
+
+  .cloud {
+    position: fixed;
+    background: white;
+    border-radius: 50px;
+    opacity: 0.6;
+    animation: floatCloud linear infinite;
+    z-index: 0;
+  }
+  .cloud::before, .cloud::after {
+    content: '';
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+  }
+  .cloud1 { width: 100px; height: 35px; top: 8%; animation-duration: 30s; animation-delay: -10s; }
+  .cloud1::before { width: 50px; height: 50px; top: -20px; left: 15px; }
+  .cloud1::after { width: 35px; height: 35px; top: -12px; left: 45px; }
+  .cloud2 { width: 80px; height: 28px; top: 20%; animation-duration: 40s; animation-delay: -20s; }
+  .cloud2::before { width: 40px; height: 40px; top: -16px; left: 10px; }
+  .cloud2::after { width: 28px; height: 28px; top: -10px; left: 38px; }
+  .cloud3 { width: 120px; height: 40px; top: 60%; animation-duration: 25s; animation-delay: -5s; }
+  .cloud3::before { width: 60px; height: 60px; top: -25px; left: 18px; }
+  .cloud3::after { width: 42px; height: 42px; top: -15px; left: 55px; }
+
+  @keyframes floatCloud {
+    from { left: -200px; }
+    to { left: 110%; }
+  }
+
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 500px;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 20px;
+    animation: bounceIn 0.6s ease;
+  }
+  .header h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.4rem;
+    color: var(--dark);
+    text-shadow: 3px 3px 0 rgba(255,255,255,0.7);
+    line-height: 1.1;
+  }
+  .header p {
+    font-size: 1rem;
+    color: var(--purple);
+    font-weight: 700;
+    margin-top: 4px;
+  }
+  .mascot {
+    font-size: 4rem;
+    display: block;
+    animation: wiggle 2s ease-in-out infinite;
+  }
+
+  /* Total score bar */
+  .stars-bar {
+    background: white;
+    border-radius: 20px;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border: 3px solid var(--sun);
+  }
+  .stars-label {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    color: var(--dark);
+    white-space: nowrap;
+  }
+  .stars-count {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.6rem;
+    color: var(--sun);
+    text-shadow: 1px 1px 0 #e0a800;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+  }
+  .progress-bar {
+    background: #eee;
+    border-radius: 20px;
+    height: 10px;
+    flex: 1;
+    margin: 0 10px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #FFD93D, #FF6B6B);
+    border-radius: 20px;
+    transition: width 0.5s cubic-bezier(.68,-0.55,.27,1.55);
+  }
+
+  /* Level select */
+  .levels-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .level-btn {
+    flex: 1;
+    background: white;
+    border: 3px solid #ddd;
+    border-radius: 16px;
+    padding: 10px 6px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #666;
+    text-align: center;
+  }
+  .level-btn.active {
+    border-color: var(--purple);
+    background: linear-gradient(135deg, #f5f0ff, #e8deff);
+    color: var(--purple);
+    transform: scale(1.04);
+  }
+
+  /* Card */
+  .card {
+    background: white;
+    border-radius: 28px;
+    padding: 24px 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    text-align: center;
+    animation: slideUp 0.4s ease;
+  }
+
+  .level-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--purple), #c77dff);
+    color: white;
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.85rem;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+
+  .word-display {
+    font-family: 'Fredoka One', cursive;
+    font-size: 3rem;
+    color: var(--dark);
+    margin: 8px 0 4px;
+    line-height: 1.1;
+  }
+  .word-emoji {
+    font-size: 5rem;
+    display: block;
+    margin: 10px 0;
+    filter: drop-shadow(3px 4px 0 rgba(0,0,0,0.1));
+  }
+  .word-thai {
+    font-size: 1.1rem;
+    color: #888;
+    font-weight: 700;
+  }
+  .word-phonetic {
+    font-size: 1rem;
+    color: var(--purple);
+    font-weight: 600;
+    margin-top: 4px;
+    background: #f5f0ff;
+    display: inline-block;
+    padding: 2px 12px;
+    border-radius: 20px;
+  }
+
+  /* Attempt counter */
+  .attempt-indicator {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 10px 0 4px;
+  }
+  .attempt-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: #eee;
+    border: 2px solid #ddd;
+    transition: all 0.3s;
+  }
+  .attempt-dot.used { background: #ffb3b3; border-color: #FF6B6B; }
+  .attempt-dot.active { background: #FF6B6B; border-color: #cc0000; transform: scale(1.2); }
+
+  /* Buttons */
+  .btn-listen {
+    background: linear-gradient(135deg, var(--sky), var(--sky2));
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 12px 28px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    cursor: pointer;
+    margin: 14px 8px 0;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.15);
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-listen:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,0.15); }
+
+  .btn-record {
+    background: linear-gradient(135deg, #FF6B6B, #ee0979);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 14px 32px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 5px 0 rgba(0,0,0,0.2);
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 6px;
+  }
+  .btn-record:active { transform: translateY(4px); box-shadow: 0 1px 0 rgba(0,0,0,0.2); }
+  .btn-record.recording { animation: pulse-rec 1s ease infinite; }
+  .btn-record:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  @keyframes pulse-rec {
+    0%, 100% { box-shadow: 0 5px 0 rgba(0,0,0,0.2), 0 0 0 0 rgba(255,0,0,0.3); }
+    50% { box-shadow: 0 5px 0 rgba(0,0,0,0.2), 0 0 0 12px rgba(255,0,0,0); }
+  }
+
+  .mic-wave { display: none; font-size: 1.4rem; }
+  .btn-record.recording .mic-wave { display: inline; }
+  .mic-icon { font-size: 1.4rem; }
+
+  /* ===== STAR RATING RESULT ===== */
+  .result-box {
+    display: none;
+    border-radius: 24px;
+    padding: 18px 16px 14px;
+    margin-top: 16px;
+    animation: bounceIn 0.5s ease;
+    text-align: center;
+  }
+  .result-box.show { display: block; }
+
+  /* Star rating display */
+  .star-rating-display {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  .rating-star {
+    font-size: 2.8rem;
+    filter: grayscale(1) opacity(0.3);
+    transition: all 0.3s;
+    transform: scale(0.8);
+  }
+  .rating-star.lit {
+    filter: none;
+    transform: scale(1.1);
+  }
+  .rating-star.lit.bounce {
+    animation: starBounce 0.5s ease;
+  }
+
+  @keyframes starBounce {
+    0% { transform: scale(0.5) rotate(-20deg); }
+    60% { transform: scale(1.3) rotate(10deg); }
+    100% { transform: scale(1.1) rotate(0deg); }
+  }
+
+  .result-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.5rem;
+    margin-bottom: 4px;
+  }
+  .result-subtitle {
+    font-size: 0.95rem;
+    font-weight: 700;
+    opacity: 0.8;
+  }
+  .result-spoken {
+    font-size: 0.85rem;
+    opacity: 0.65;
+    margin-top: 4px;
+  }
+
+  /* Colors per rating */
+  .result-box.rating-3 {
+    background: linear-gradient(135deg, #fffacd, #fff0a0);
+    border: 3px solid #FFD700;
+  }
+  .result-box.rating-3 .result-title { color: #7a5c00; }
+  .result-box.rating-2 {
+    background: linear-gradient(135deg, #d4f5d4, #b7e4b7);
+    border: 3px solid #6BCB77;
+  }
+  .result-box.rating-2 .result-title { color: #1a5c1a; }
+  .result-box.rating-1 {
+    background: linear-gradient(135deg, #fde8e8, #fac5c5);
+    border: 3px solid #FF6B6B;
+  }
+  .result-box.rating-1 .result-title { color: #8b0000; }
+  .result-box.rating-0 {
+    background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+    border: 3px solid #ccc;
+  }
+  .result-box.rating-0 .result-title { color: #555; }
+
+  /* Next button */
+  .btn-next {
+    background: linear-gradient(135deg, var(--mint), #2ec46d);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 13px 32px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    cursor: pointer;
+    box-shadow: 0 5px 0 rgba(0,0,0,0.15);
+    transition: all 0.15s;
+    margin-top: 12px;
+    display: none;
+  }
+  .btn-next:active { transform: translateY(4px); box-shadow: none; }
+
+  .speak-hint {
+    font-size: 0.85rem;
+    color: #aaa;
+    margin-top: 8px;
+    font-weight: 600;
+  }
+
+  /* Fallback */
+  .fallback-section {
+    display: none;
+    margin-top: 14px;
+    background: #fff8e1;
+    border: 2px dashed #FFD93D;
+    border-radius: 16px;
+    padding: 14px;
+  }
+  .fallback-section.visible { display: block; }
+  .fallback-label {
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.95rem;
+    color: #7a5c00;
+    margin-bottom: 10px;
+  }
+  .fallback-btns { display: flex; gap: 8px; justify-content: center; }
+  .btn-fb {
+    border: none;
+    border-radius: 50px;
+    padding: 10px 20px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.95rem;
+    cursor: pointer;
+    box-shadow: 0 3px 0 rgba(0,0,0,0.12);
+    transition: all 0.15s;
+  }
+  .btn-fb:active { transform: translateY(2px); box-shadow: none; }
+  .btn-fb-3 { background: linear-gradient(135deg, #FFD700, #ffa500); color: white; }
+  .btn-fb-2 { background: linear-gradient(135deg, var(--mint), #2ec46d); color: white; }
+  .btn-fb-1 { background: linear-gradient(135deg, #FF6B6B, #ee0979); color: white; }
+
+  /* Star burst */
+  .star-burst {
+    position: fixed;
+    pointer-events: none;
+    z-index: 999;
+    animation: starFly 1.2s ease forwards;
+  }
+  @keyframes starFly {
+    0% { transform: scale(0) rotate(0deg); opacity: 1; }
+    70% { transform: scale(1.4) rotate(20deg); opacity: 1; }
+    100% { transform: scale(0.5) translateY(-120px) rotate(-30deg); opacity: 0; }
+  }
+
+  /* History */
+  .history {
+    background: white;
+    border-radius: 20px;
+    padding: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  }
+  .history h3 {
+    font-family: 'Fredoka One', cursive;
+    color: var(--dark);
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+  }
+  .history-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .history-item {
+    background: #f8f8f8;
+    border-radius: 12px;
+    padding: 6px 10px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* Trophy */
+  .trophy-popup {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+  .trophy-popup.show { display: flex; }
+  .trophy-box {
+    background: white;
+    border-radius: 30px;
+    padding: 36px 28px;
+    text-align: center;
+    animation: bounceIn 0.5s ease;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    max-width: 340px;
+    width: 90%;
+  }
+  .trophy-emoji { font-size: 5rem; display: block; animation: wiggle 1s ease infinite; }
+  .trophy-box h2 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2rem;
+    color: var(--dark);
+    margin: 10px 0 6px;
+  }
+  .trophy-box p { color: #888; font-weight: 700; }
+  /* Summary stars breakdown */
+  .summary-stars {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    margin: 14px 0 0;
+  }
+  .summary-item {
+    text-align: center;
+    font-family: 'Fredoka One', cursive;
+  }
+  .summary-item .big { font-size: 1.8rem; }
+  .summary-item .lbl { font-size: 0.8rem; color: #aaa; }
+  .btn-restart {
+    background: linear-gradient(135deg, var(--sun), var(--peach));
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 14px 32px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-top: 18px;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.15);
+  }
+
+  @keyframes bounceIn {
+    0% { transform: scale(0.7); opacity: 0; }
+    80% { transform: scale(1.05); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  @keyframes slideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(-5deg); }
+    50% { transform: rotate(5deg); }
+  }
+</style>
+</head>
+<body>
+
+<div class="cloud cloud1"></div>
+<div class="cloud cloud2"></div>
+<div class="cloud cloud3"></div>
+
+<div class="wrapper">
+  <div class="header">
+    <span class="mascot">🦜</span>
+    <h1>Star Speaker</h1>
+    <p>พูดให้แม่น แล้วรับดาวสูงสุด 3 ดวง! ⭐⭐⭐</p>
+  </div>
+
+  <div class="levels-row">
+    <button class="level-btn active" onclick="setLevel(0)">🐣<br>เริ่มต้น</button>
+    <button class="level-btn" onclick="setLevel(1)">🐔<br>กลาง</button>
+    <button class="level-btn" onclick="setLevel(2)">🦅<br>เก่งมาก</button>
+  </div>
+
+  <!-- Total score bar -->
+  <div class="stars-bar">
+    <span class="stars-label">⭐ คะแนนรวม</span>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill" style="width:0%"></div>
+    </div>
+    <div class="stars-count">
+      <span id="starCount">0</span> / <span id="starMax">15</span>⭐
+    </div>
+  </div>
+
+  <!-- Word Card -->
+  <div class="card" id="wordCard">
+    <div class="level-badge" id="levelBadge">ระดับเริ่มต้น 🐣</div>
+    <span class="word-emoji" id="wordEmoji">🐱</span>
+    <div class="word-display" id="wordDisplay">CAT</div>
+    <div class="word-phonetic" id="wordPhonetic">แคท</div>
+    <div class="word-thai" id="wordThai">แมว</div>
+
+    <!-- Attempt dots (3 tries per word) -->
+    <div class="attempt-indicator" id="attemptDots">
+      <div class="attempt-dot active" id="dot0"></div>
+      <div class="attempt-dot" id="dot1"></div>
+      <div class="attempt-dot" id="dot2"></div>
+    </div>
+
+    <button class="btn-listen" onclick="speakWord()">🔊 ฟังเสียง</button>
+    <br>
+    <button class="btn-record" id="btnRecord" onclick="startRecording()">
+      <span class="mic-icon">🎤</span>
+      <span class="mic-wave">🎵</span>
+      <span id="recordLabel">กดแล้วพูดเลย!</span>
+    </button>
+    <div class="speak-hint" id="speakHint">กดปุ่มแดง แล้วพูดคำนั้นออกมาดังๆ 😊</div>
+
+    <!-- Fallback manual rating -->
+    <div class="fallback-section" id="fallbackSection">
+      <div class="fallback-label">🎤 ไม่พบไมโครโฟน — ให้คะแนนตัวเองนะ!</div>
+      <div class="fallback-btns">
+        <button class="btn-fb btn-fb-3" onclick="handleRating(3)">⭐⭐⭐<br><small>เยี่ยม!</small></button>
+        <button class="btn-fb btn-fb-2" onclick="handleRating(2)">⭐⭐<br><small>ดี!</small></button>
+        <button class="btn-fb btn-fb-1" onclick="handleRating(1)">⭐<br><small>พยายาม</small></button>
+      </div>
+    </div>
+
+    <!-- Result -->
+    <div class="result-box" id="resultBox">
+      <div class="star-rating-display">
+        <span class="rating-star" id="rs1">⭐</span>
+        <span class="rating-star" id="rs2">⭐</span>
+        <span class="rating-star" id="rs3">⭐</span>
+      </div>
+      <div class="result-title" id="resultTitle">เก่งมาก!</div>
+      <div class="result-subtitle" id="resultSubtitle"></div>
+      <div class="result-spoken" id="resultSpoken"></div>
+    </div>
+
+    <button class="btn-next" id="btnNext" onclick="nextWord()">คำต่อไป ➡️</button>
+  </div>
+
+  <!-- History -->
+  <div class="history" id="historySection" style="display:none">
+    <h3>📝 คำที่ฝึกแล้ว</h3>
+    <div class="history-list" id="historyList"></div>
+  </div>
+</div>
+
+<!-- Trophy popup -->
+<div class="trophy-popup" id="trophyPopup">
+  <div class="trophy-box">
+    <span class="trophy-emoji" id="trophyEmoji">🏆</span>
+    <h2 id="trophyTitle">เก่งมากเลย!</h2>
+    <p id="trophyMsg"></p>
+    <div class="summary-stars" id="summaryStars"></div>
+    <button class="btn-restart" onclick="resetGame()">เล่นอีกรอบ! 🔄</button>
+  </div>
+</div>
+
+<script>
+const WORDS_PER_ROUND = 5;
+const MAX_SCORE = WORDS_PER_ROUND * 3; // 15
+
+const levels = [
+  {
+    name: 'ระดับเริ่มต้น 🐣',
+    words: [
+      { word: 'CAT', emoji: '🐱', thai: 'แมว', phonetic: 'แคท' },
+      { word: 'DOG', emoji: '🐶', thai: 'หมา', phonetic: 'ด็อก' },
+      { word: 'SUN', emoji: '☀️', thai: 'ดวงอาทิตย์', phonetic: 'ซัน' },
+      { word: 'FISH', emoji: '🐟', thai: 'ปลา', phonetic: 'ฟิช' },
+      { word: 'BIRD', emoji: '🐦', thai: 'นก', phonetic: 'เบิร์ด' },
+      { word: 'CAKE', emoji: '🎂', thai: 'เค้ก', phonetic: 'เค้ก' },
+      { word: 'BALL', emoji: '⚽', thai: 'ลูกบอล', phonetic: 'บอล' },
+      { word: 'STAR', emoji: '⭐', thai: 'ดาว', phonetic: 'สตาร์' },
+    ]
+  },
+  {
+    name: 'ระดับกลาง 🐔',
+    words: [
+      { word: 'APPLE', emoji: '🍎', thai: 'แอปเปิ้ล', phonetic: 'แอ็บเปิ้ล' },
+      { word: 'HAPPY', emoji: '😊', thai: 'มีความสุข', phonetic: 'แฮบปี้' },
+      { word: 'WATER', emoji: '💧', thai: 'น้ำ', phonetic: 'วอเทอร์' },
+      { word: 'ORANGE', emoji: '🍊', thai: 'ส้ม', phonetic: 'ออเรนจ์' },
+      { word: 'FLOWER', emoji: '🌸', thai: 'ดอกไม้', phonetic: 'ฟลาวเวอร์' },
+      { word: 'MONKEY', emoji: '🐒', thai: 'ลิง', phonetic: 'มังกี้' },
+      { word: 'YELLOW', emoji: '💛', thai: 'สีเหลือง', phonetic: 'เยลโล่' },
+      { word: 'RABBIT', emoji: '🐰', thai: 'กระต่าย', phonetic: 'แรบบิท' },
+    ]
+  },
+  {
+    name: 'ระดับเก่งมาก 🦅',
+    words: [
+      { word: 'ELEPHANT', emoji: '🐘', thai: 'ช้าง', phonetic: 'เอเลแฟนท์' },
+      { word: 'BUTTERFLY', emoji: '🦋', thai: 'ผีเสื้อ', phonetic: 'บัตเตอร์ฟลาย' },
+      { word: 'CHOCOLATE', emoji: '🍫', thai: 'ช็อกโกแลต', phonetic: 'ช็อกโกเลต' },
+      { word: 'BEAUTIFUL', emoji: '✨', thai: 'สวยงาม', phonetic: 'บิวทิฟูล' },
+      { word: 'DINOSAUR', emoji: '🦕', thai: 'ไดโนเสาร์', phonetic: 'ไดโนซอร์' },
+      { word: 'STRAWBERRY', emoji: '🍓', thai: 'สตรอว์เบอร์รี', phonetic: 'สตรอเบอร์รี' },
+      { word: 'ADVENTURE', emoji: '🗺️', thai: 'การผจญภัย', phonetic: 'แอดเวนเจอร์' },
+      { word: 'WONDERFUL', emoji: '🌈', thai: 'วิเศษมาก', phonetic: 'วันเดอร์ฟูล' },
+    ]
+  }
+];
+
+// State
+let currentLevel = 0;
+let wordQueue = [];
+let currentIndex = 0;
+let totalStars = 0;
+let attemptNo = 0;      // 0,1,2 — which attempt we're on (for 3-star logic)
+let wordDone = false;
+let history = [];
+let recognition = null;
+let isRecording = false;
+let hasMic = false;
+
+// ---- Rating logic ----
+// attempt 0 → can get 3 stars
+// attempt 1 → can get 2 stars
+// attempt 2 → can get 1 star
+// after 3 failed attempts → 0 stars, show next
+
+function computeRating(spoken, target, attempt) {
+  const s = spoken.toUpperCase();
+  const t = target.toUpperCase();
+  const exact = s === t || s.includes(t);
+  const sim = charSimilarity(s, t);
+
+  if (exact || sim >= 0.85) {
+    return 3 - attempt; // 3, 2, or 1
+  } else if (sim >= 0.55) {
+    return Math.max(1, 2 - attempt);
+  } else {
+    return 0; // miss → try again (unless last attempt)
+  }
+}
+
+function charSimilarity(a, b) {
+  if (!a || !b) return 0;
+  const setA = new Set(a.replace(/\s/g,'').split(''));
+  const setB = new Set(b.replace(/\s/g,'').split(''));
+  const inter = [...setA].filter(c => setB.has(c)).length;
+  return inter / Math.max(setA.size, setB.size);
+}
+
+// ---- Setup ----
+function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+
+function setLevel(lvl) {
+  currentLevel = lvl;
+  document.querySelectorAll('.level-btn').forEach((b,i) => b.classList.toggle('active', i===lvl));
+  document.getElementById('levelBadge').textContent = levels[lvl].name;
+  wordQueue = shuffle(levels[lvl].words).slice(0, WORDS_PER_ROUND);
+  currentIndex = 0;
+  totalStars = 0;
+  history = [];
+  updateScoreBar();
+  showWord();
+  document.getElementById('historySection').style.display = 'none';
+  document.getElementById('historyList').innerHTML = '';
+}
+
+function showWord() {
+  if (currentIndex >= wordQueue.length) { showTrophy(); return; }
+  attemptNo = 0;
+  wordDone = false;
+  const w = wordQueue[currentIndex];
+  document.getElementById('wordDisplay').textContent = w.word;
+  document.getElementById('wordEmoji').textContent = w.emoji;
+  document.getElementById('wordThai').textContent = w.thai;
+  document.getElementById('wordPhonetic').textContent = w.phonetic;
+  resetResultUI();
+  updateAttemptDots();
+  document.getElementById('wordCard').style.animation = 'none';
+  setTimeout(() => document.getElementById('wordCard').style.animation = 'slideUp 0.4s ease', 10);
+}
+
+function resetResultUI() {
+  const rb = document.getElementById('resultBox');
+  rb.className = 'result-box';
+  document.getElementById('btnNext').style.display = 'none';
+  document.getElementById('btnRecord').disabled = false;
+  document.getElementById('btnRecord').style.display = 'inline-flex';
+  document.getElementById('speakHint').textContent = 'กดปุ่มแดง แล้วพูดคำนั้นออกมาดังๆ 😊';
+  document.getElementById('fallbackSection').classList.remove('visible');
+}
+
+function updateAttemptDots() {
+  for (let i=0; i<3; i++) {
+    const d = document.getElementById('dot'+i);
+    d.className = 'attempt-dot';
+    if (i < attemptNo) d.classList.add('used');
+    else if (i === attemptNo) d.classList.add('active');
+  }
+}
+
+// ---- Audio ----
+function speakWord() {
+  const w = wordQueue[currentIndex];
+  const u = new SpeechSynthesisUtterance(w.word);
+  u.lang = 'en-US'; u.rate = 0.75; u.pitch = 1.1;
+  window.speechSynthesis.speak(u);
+}
+
+// ---- Recording ----
+function setupRecognition() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) return false;
+  recognition = new SR();
+  recognition.lang = 'en-US';
+  recognition.continuous = false;
+  recognition.interimResults = false;
+  recognition.onresult = (e) => {
+    const spoken = e.results[0][0].transcript.trim();
+    stopRecordingUI();
+    processSpoken(spoken);
+  };
+  recognition.onerror = () => { stopRecordingUI(); showFallback(); };
+  recognition.onend = () => { stopRecordingUI(); };
+  return true;
+}
+
+function startRecording() {
+  if (wordDone) return;
+  if (isRecording) { if (recognition) recognition.stop(); stopRecordingUI(); return; }
+  if (!hasMic) hasMic = setupRecognition();
+  if (!hasMic || !recognition) { showFallback(); return; }
+
+  isRecording = true;
+  document.getElementById('btnRecord').classList.add('recording');
+  document.getElementById('recordLabel').textContent = 'กำลังฟัง... พูดเลย!';
+  document.getElementById('speakHint').textContent = '🎵 กำลังฟังเสียงคุณอยู่...';
+  try { recognition.start(); } catch(e) { stopRecordingUI(); showFallback(); }
+}
+
+function stopRecordingUI() {
+  isRecording = false;
+  document.getElementById('btnRecord').classList.remove('recording');
+  document.getElementById('recordLabel').textContent = 'กดแล้วพูดเลย!';
+}
+
+function showFallback() {
+  document.getElementById('fallbackSection').classList.add('visible');
+  document.getElementById('btnRecord').style.display = 'none';
+  document.getElementById('speakHint').textContent = 'ไม่พบไมโครโฟน — ให้คะแนนตัวเองนะ 😊';
+}
+
+// ---- Core rating ----
+function processSpoken(spoken) {
+  const target = wordQueue[currentIndex].word;
+  const rating = computeRating(spoken, target, attemptNo);
+
+  if (rating > 0) {
+    handleRating(rating, spoken);
+  } else {
+    // miss — increment attempt
+    attemptNo++;
+    updateAttemptDots();
+    if (attemptNo >= 3) {
+      handleRating(0, spoken); // out of tries
+    } else {
+      // show "try again" nudge
+      showTryAgain(spoken);
+    }
+  }
+}
+
+function showTryAgain(spoken) {
+  const hints = [
+    '😅 เกือบแล้ว! ลองอีกครั้งนะ',
+    '💪 ใกล้มากแล้ว! พูดให้ชัดขึ้นอีกหน่อย',
+    '🎯 ฟังเสียงอีกครั้ง แล้วลองใหม่!',
+  ];
+  document.getElementById('speakHint').textContent =
+    (spoken ? `ได้ยินว่า "${spoken}" — ` : '') + hints[attemptNo-1];
+}
+
+function handleRating(rating, spoken='') {
+  wordDone = true;
+  const w = wordQueue[currentIndex];
+  totalStars += rating;
+  updateScoreBar();
+
+  // Light up stars with delay
+  const rb = document.getElementById('resultBox');
+  rb.className = 'result-box rating-' + rating + ' show';
+
+  for (let i=1; i<=3; i++) {
+    const el = document.getElementById('rs'+i);
+    el.classList.remove('lit','bounce');
+    if (i <= rating) {
+      setTimeout(() => {
+        el.classList.add('lit','bounce');
+      }, i * 200);
+    }
+  }
+
+  // Messages
+  const msgs = {
+    3: { title: '🌟 เยี่ยมมาก!', sub: 'ออกเสียงได้สมบูรณ์แบบ! ได้ 3 ดาว!' },
+    2: { title: '👍 ดีมาก!', sub: 'ออกเสียงได้ดี! ได้ 2 ดาว!' },
+    1: { title: '😊 พยายามดี!', sub: 'ได้ 1 ดาว ลองฝึกอีกนะ!' },
+    0: { title: '😅 ไม่เป็นไร!', sub: 'ยังไม่ได้ดาวครั้งนี้ ฝึกต่อนะ!' },
+  };
+  const m = msgs[rating];
+  document.getElementById('resultTitle').textContent = m.title;
+  document.getElementById('resultSubtitle').textContent = m.sub;
+  document.getElementById('resultSpoken').textContent = spoken ? `ได้ยินว่า: "${spoken}"` : '';
+
+  if (rating >= 2) spawnStars(rating);
+  document.getElementById('btnNext').style.display = 'inline-block';
+  document.getElementById('btnRecord').disabled = true;
+  document.getElementById('fallbackSection').classList.remove('visible');
+  document.getElementById('btnRecord').style.display = 'inline-flex';
+
+  addHistory(w, rating);
+}
+
+function nextWord() {
+  currentIndex++;
+  showWord();
+}
+
+// ---- Score bar ----
+function updateScoreBar() {
+  const max = WORDS_PER_ROUND * 3;
+  document.getElementById('starCount').textContent = totalStars;
+  document.getElementById('starMax').textContent = max;
+  const pct = Math.min((totalStars / max) * 100, 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+// ---- Particles ----
+function spawnStars(count) {
+  const icons = count === 3
+    ? ['🌟','⭐','✨','💫']
+    : ['⭐','✨'];
+  const n = count === 3 ? 7 : 4;
+  for (let i=0; i<n; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'star-burst';
+      el.textContent = icons[Math.floor(Math.random()*icons.length)];
+      el.style.fontSize = (1.5 + Math.random()) + 'rem';
+      el.style.left = (15 + Math.random() * 70) + '%';
+      el.style.top = (15 + Math.random() * 55) + '%';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 1400);
+    }, i * 100);
+  }
+}
+
+// ---- History ----
+function addHistory(w, rating) {
+  const stars = '⭐'.repeat(rating) || '❌';
+  history.unshift({ emoji: w.emoji, word: w.word, stars, rating });
+  const section = document.getElementById('historySection');
+  const list = document.getElementById('historyList');
+  section.style.display = 'block';
+  list.innerHTML = history.slice(0,12).map(h => {
+    const colors = ['#ccc','#ff9090','#90d490','#FFD700'];
+    return `<div class="history-item" style="border:2px solid ${colors[h.rating]}">${h.emoji} ${h.word} ${h.stars}</div>`;
+  }).join('');
+}
+
+// ---- Trophy ----
+function showTrophy() {
+  const max = WORDS_PER_ROUND * 3;
+  const pct = totalStars / max;
+  let emoji = '🏆', title = 'เก่งมากเลย!';
+  if (pct === 1) { emoji = '👑'; title = 'สมบูรณ์แบบ!'; }
+  else if (pct >= 0.7) { emoji = '🥇'; title = 'เก่งมากเลย!'; }
+  else if (pct >= 0.4) { emoji = '🥈'; title = 'ดีมาก!'; }
+  else { emoji = '🥉'; title = 'ยังไงก็ฝึกต่อนะ!'; }
+
+  document.getElementById('trophyEmoji').textContent = emoji;
+  document.getElementById('trophyTitle').textContent = title;
+  document.getElementById('trophyMsg').textContent = `ได้ ${totalStars} จาก ${max} ดาว`;
+
+  // Stars breakdown
+  const cnt3 = history.filter(h=>h.rating===3).length;
+  const cnt2 = history.filter(h=>h.rating===2).length;
+  const cnt1 = history.filter(h=>h.rating===1).length;
+  const cnt0 = history.filter(h=>h.rating===0).length;
+  document.getElementById('summaryStars').innerHTML = `
+    <div class="summary-item"><div class="big">⭐⭐⭐</div><div class="lbl">${cnt3} ครั้ง</div></div>
+    <div class="summary-item"><div class="big">⭐⭐</div><div class="lbl">${cnt2} ครั้ง</div></div>
+    <div class="summary-item"><div class="big">⭐</div><div class="lbl">${cnt1} ครั้ง</div></div>
+    <div class="summary-item"><div class="big">❌</div><div class="lbl">${cnt0} ครั้ง</div></div>
+  `;
+
+  document.getElementById('trophyPopup').classList.add('show');
+  spawnStars(3); setTimeout(() => spawnStars(3), 600);
+}
+
+function resetGame() {
+  document.getElementById('trophyPopup').classList.remove('show');
+  totalStars = 0;
+  history = [];
+  document.getElementById('historySection').style.display = 'none';
+  document.getElementById('historyList').innerHTML = '';
+  wordQueue = shuffle(levels[currentLevel].words).slice(0, WORDS_PER_ROUND);
+  currentIndex = 0;
+  updateScoreBar();
+  showWord();
+}
+
+// Init
+hasMic = setupRecognition();
+if (!hasMic) document.getElementById('speakHint').textContent = '⚠️ ไม่พบไมโครโฟน — ใช้ปุ่มด้านล่างแทน';
+setLevel(0);
+</script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js")
+      .then(() => console.log("✅ Service Worker ลงทะเบียนแล้ว"))
+      .catch(err => console.log("SW error:", err));
+  });
+}
+</script>
+</body>
+</html>
