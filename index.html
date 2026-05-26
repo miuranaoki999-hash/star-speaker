@@ -138,10 +138,32 @@
   .result-box.rating-0{background:linear-gradient(135deg,#f0f0f0,#e0e0e0);border:3px solid #ccc;}
   .result-box.rating-0 .result-title{color:#555;}
 
-  .btn-next{background:linear-gradient(135deg,var(--mint),#2ec46d);color:white;border:none;
-    border-radius:50px;padding:12px 28px;font-family:'Fredoka One',cursive;font-size:1rem;
-    cursor:pointer;box-shadow:0 5px 0 rgba(0,0,0,.15);transition:all .15s;margin-top:12px;display:none;}
-  .btn-next:active{transform:translateY(4px);box-shadow:none;}
+  .btn-next{
+    background:linear-gradient(135deg,var(--mint),#2ec46d);
+    color:white;border:none;border-radius:50px;
+    padding:16px 48px;
+    font-family:'Fredoka One',cursive;font-size:1.2rem;
+    cursor:pointer;
+    box-shadow:0 6px 20px rgba(107,203,119,.5);
+    transition:all .2s;
+    display:none;
+
+    /* ลอยติดด้านล่าง */
+    position:fixed;
+    bottom:28px;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:500;
+    white-space:nowrap;
+    animation:popUp .35s cubic-bezier(.68,-.55,.27,1.55);
+  }
+  .btn-next:active{transform:translateX(-50%) translateY(4px);box-shadow:0 2px 8px rgba(107,203,119,.4);}
+  @keyframes popUp{
+    0%{opacity:0;transform:translateX(-50%) translateY(40px) scale(.8);}
+    100%{opacity:1;transform:translateX(-50%) translateY(0) scale(1);}
+  }
+  /* padding ล่างหน้าเพื่อไม่ให้ปุ่มทับเนื้อหา */
+  .card{ padding-bottom: 20px; }
 
   /* Fallback */
   .fallback-section{display:none;margin-top:12px;background:#fff8e1;border:2px dashed #FFD93D;
@@ -917,45 +939,57 @@ function updateAttemptDots() {
 }
 
 // ---- Audio ----
-function speakWord() {
+async function speakWord() {
   const w = wordQueue[currentIndex];
-  const synth = window.speechSynthesis;
-  if (!synth) { setHint('⚠️ เบราว์เซอร์ไม่รองรับ TTS', '#FF6B6B'); return; }
 
-  // Resume AudioContext ถ้า suspended (Android ต้องการ user gesture)
+  // Resume AudioContext ถ้า suspended
   if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
 
-  // Cancel ที่ค้างอยู่
-  synth.cancel();
+  // 1) Capacitor TTS Plugin (ใช้ใน APK — ทำงานได้แน่นอน)
+  if (window.Capacitor && window.Capacitor.isNativePlatform()) {
+    try {
+      await window.Capacitor.Plugins.TextToSpeech.speak({
+        text: w.word,
+        lang: 'en-US',
+        rate: 0.75,
+        pitch: 1.0,
+        volume: 1.0,
+        category: 'ambient',
+      });
+      return;
+    } catch(e) {
+      console.warn('Capacitor TTS error:', e);
+    }
+  }
 
-  const u = new SpeechSynthesisUtterance(w.word);
-  u.lang = 'en-US';
-  u.rate = 0.72;
-  u.pitch = 1.0;
-  u.volume = 1.0;
+  // 2) Web Speech Synthesis (ใช้ใน Browser ปกติ)
+  const synth = window.speechSynthesis;
+  if (synth) {
+    synth.cancel();
+    const u = new SpeechSynthesisUtterance(w.word);
+    u.lang = 'en-US';
+    u.rate = 0.72;
+    u.pitch = 1.0;
+    u.volume = 1.0;
 
-  // หา voice ภาษาอังกฤษ ถ้ามี
-  const voices = synth.getVoices();
-  const enVoice = voices.find(v => v.lang.startsWith('en')) || null;
-  if (enVoice) u.voice = enVoice;
-
-  u.onerror = (e) => {
-    // TTS error — ลอง fallback ด้วย beep + hint
-    setHint('🔇 เสียงพูดไม่ออก — ดูคำอ่านข้างล่างนะ 👆', '#FF9671');
-    playTone(660, 'sine', 0, 0.1, 0.2);
-  };
-
-  synth.speak(u);
-
-  // Android bug: บางครั้ง speak() ไม่ทำงานถ้า voices ยังโหลดไม่เสร็จ
-  if (voices.length === 0) {
-    synth.onvoiceschanged = () => {
-      synth.cancel();
-      const v2 = synth.getVoices().find(v => v.lang.startsWith('en')) || null;
-      if (v2) u.voice = v2;
+    const trySpeak = () => {
+      const voices = synth.getVoices();
+      const enVoice = voices.find(v => v.lang.startsWith('en')) || null;
+      if (enVoice) u.voice = enVoice;
+      u.onerror = () => setHint('🔇 เสียงไม่ออก — ดูคำอ่านด้านบนนะ 👆', '#FF9671');
       synth.speak(u);
     };
+
+    if (synth.getVoices().length > 0) {
+      trySpeak();
+    } else {
+      synth.onvoiceschanged = trySpeak;
+    }
+    return;
   }
+
+  // 3) ไม่รองรับทั้งคู่
+  setHint('🔇 เสียงไม่ออก — ดูคำอ่านด้านบนนะ 👆', '#FF9671');
 }
 
 // ---- Recording ----
@@ -1104,30 +1138,58 @@ function charSimilarity(a, b) {
   return inter / Math.max(sA.size, sB.size);
 }
 
+// เสียงเด็กมักออกเสียงพยัญชนะต้น/ท้ายผิด ตัดพยัญชนะท้ายออกมาเปรียบเทียบด้วย
+function normalize(str) {
+  return str.toUpperCase().trim().replace(/[^A-Z0-9 ]/g,'');
+}
+
+function startsWith2(s, t) {
+  // เช็คว่าขึ้นต้นตรงกันอย่างน้อย 60% ของความยาวคำ
+  const minLen = Math.max(2, Math.floor(t.length * 0.6));
+  return s.startsWith(t.slice(0, minLen)) || t.startsWith(s.slice(0, minLen));
+}
+
+function soundsLike(s, t) {
+  // เสียงเด็กมักตัดพยัญชนะท้าย: CAT → CA, FISH → FI
+  // เช็ค prefix ยาว 70% ขึ้นไป
+  const cut = Math.floor(t.length * 0.7);
+  if (cut >= 2 && s.startsWith(t.slice(0,cut))) return true;
+  if (cut >= 2 && t.startsWith(s.slice(0,cut))) return true;
+  return false;
+}
+
 function computeRating(spoken, target, attempt) {
-  const s = spoken.toUpperCase().trim().replace(/[^A-Z0-9 ]/g,'');
-  const t = target.toUpperCase().trim().replace(/[^A-Z0-9 ]/g,'');
+  const s = normalize(spoken);
+  const t = normalize(target);
   if (!s) return 0;
 
   // 1) exact / contains
   if (s === t || s.includes(t) || t.includes(s)) return Math.max(1, 3 - attempt);
 
-  // 2) word-level match (สำหรับ multi-word เช่น GOOD MORNING)
+  // 2) word-level match (multi-word เช่น GOOD MORNING)
   const tWords = t.split(' ');
   const sWords = s.split(' ');
-  const wordMatch = tWords.every(tw => sWords.some(sw => sw === tw || levenshtein(sw,tw) <= 1));
+  const wordMatch = tWords.every(tw =>
+    sWords.some(sw => sw === tw || levenshtein(sw, tw) <= Math.ceil(tw.length * 0.3))
+  );
   if (wordMatch) return Math.max(1, 3 - attempt);
 
-  // 3) levenshtein distance
+  // 3) levenshtein — ผ่อนปรนขึ้นสำหรับเสียงเด็ก
   const dist = levenshtein(s, t);
   const ratio = 1 - dist / Math.max(s.length, t.length);
-  if (ratio >= 0.80) return Math.max(1, 3 - attempt);
-  if (ratio >= 0.60) return Math.max(1, 2 - attempt);
+  if (ratio >= 0.70) return Math.max(1, 3 - attempt);  // ลดจาก 0.80
+  if (ratio >= 0.45) return Math.max(1, 2 - attempt);  // ลดจาก 0.60
 
-  // 4) char similarity fallback
+  // 4) เสียงเด็กตัดพยัญชนะท้าย เช่น FISH → FIS, CAT → CA
+  if (soundsLike(s, t)) return Math.max(1, 2 - attempt);
+
+  // 5) ขึ้นต้นตรงกัน
+  if (startsWith2(s, t)) return 1;
+
+  // 6) char similarity
   const sim = charSimilarity(s, t);
-  if (sim >= 0.75) return Math.max(1, 2 - attempt);
-  if (sim >= 0.50) return 1;
+  if (sim >= 0.60) return Math.max(1, 2 - attempt);  // ลดจาก 0.75
+  if (sim >= 0.40) return 1;                          // ลดจาก 0.50
 
   return 0;
 }
